@@ -150,7 +150,7 @@ export default function SchoolCodes() {
         />
       </div>
       <Table className="w-full border-collapse border border-gray-300">
-        <TableCaption>List of School Teams and Codes</TableCaption>
+        <TableCaption>SACCMCT '25 - School Teams and Codes</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="border border-gray-300">School Name</TableHead>

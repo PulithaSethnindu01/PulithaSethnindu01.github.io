@@ -62,7 +62,7 @@ export function Leaderboard() {
   return (
     <div className="container mx-auto py-10">
       <Table>
-        <TableCaption>Leaderboard Table</TableCaption>
+        <TableCaption>SACCMCT '25 - Leaderboard</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Rank</TableHead>
