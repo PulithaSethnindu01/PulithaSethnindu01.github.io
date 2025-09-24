@@ -9,7 +9,7 @@ export default function PhotoAlbum() {
       <h1
         className="mt-12 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-6 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
       >
-        SACCMCT Photo Album
+        SACCMCT '25 Photo Album
       </h1>
 
       <div className="iframe-container">

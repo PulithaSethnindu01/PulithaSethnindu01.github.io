@@ -94,7 +94,7 @@ export default function Component() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            Event Agenda
+            SACCMCT '25 - Event Agenda
           </motion.div>
         </CardTitle>
       </CardHeader>

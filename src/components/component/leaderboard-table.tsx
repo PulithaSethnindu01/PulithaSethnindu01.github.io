@@ -59,7 +59,7 @@ export default function LeaderboardTable() {
 
   return (
     <div className="container mx-auto py-10">
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-center mb-6">Selected Teams</h2>
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-center mb-6">SACCMCT '25 - Selected Teams</h2>
       <div className="max-w-3xl mx-auto">
         <Table className="bg-black text-white w-full">
           <TableHeader>

@@ -84,7 +84,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Moon, Sun, Star, Rocket } from "lucide-react";
 
 export default function Countdown() {
-  const targetDate = useMemo(() => new Date("2024-11-24"), []);
+  const targetDate = useMemo(() => new Date("2025-11-24"), []);
 
   // Updated state to handle both numbers and strings
   const [timeLeft, setTimeLeft] = useState<{
@@ -144,7 +144,7 @@ export default function Countdown() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
         className="text-[1.8rem] md:text-4xl font-bold tracking-widest text-center mb-8 font-heading text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
-          CONCLUDED{".".repeat(dotCount)}
+          COMMENCING IN{".".repeat(dotCount)}
         </motion.h1>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">

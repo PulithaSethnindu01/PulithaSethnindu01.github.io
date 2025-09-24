@@ -19,8 +19,8 @@ const fontBody = Manrope({
 })
 
 export const metadata: Metadata = {
-  title: "SACCMCT '24",
-  description: "Sir Arthur C. Clarke Memorial Challenge Trophy 2024 - Anandian Astronomical Association",
+  title: "SACCMCT '25",
+  description: "Sir Arthur C. Clarke Memorial Challenge Trophy 2025 - Anandian Astronomical Association",
 };
 
 export default function RootLayout({

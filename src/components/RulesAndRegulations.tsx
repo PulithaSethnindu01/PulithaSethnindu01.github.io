@@ -47,7 +47,7 @@ const RulesAndRegulations = () => {
                 whileInView={{ opacity: 1 }}
                 className="leading-relaxed text-lg"
               >
-                The Final stages of <span className="text-white font-semibold">SACCMCT&apos;24</span> will be held on <span className="text-white font-semibold">24th November 2024</span> from <span className="text-white font-semibold">8:00 am</span> onwards at Ananda College, Colombo.
+                The Final stages of <span className="text-white font-semibold">SACCMCT&apos;25</span> will be held on <span className="text-white font-semibold">TBD</span> from <span className="text-white font-semibold">8:00 am</span> onwards at Ananda College, Colombo.
               </motion.p>
 
               <div className="grid gap-4">
@@ -68,7 +68,7 @@ const RulesAndRegulations = () => {
                     </li>
                     <li className="flex items-center space-x-3">
                       <span className="h-2 w-2 rounded-full bg-white"></span>
-                      <span>Grand Finale - Top two teams compete for the Sir Arthur C Clarke Memorial Challenge Trophy 2024</span>
+                      <span>Grand Finale - Top two teams compete for the Sir Arthur C Clarke Memorial Challenge Trophy 2025</span>
                     </li>
                   </ul>
                 </motion.div>
