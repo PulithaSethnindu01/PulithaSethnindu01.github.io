@@ -1,4 +1,4 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzOyuiJl93ggvu7wlWNQXCcC__oXWxjlTLchMa8P39RSa9FHfMvmvSRzvlstRbqjgwp/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-CyqNqFmasI3Z9TGNMu_upcHFmIb8V9T_PdPDt0ctvR0LBmPS2kRDUjaJyI9fs1yN/exec";
 
 // ===== Fetch achievements from Web App =====
 async function fetchAchievements() {
