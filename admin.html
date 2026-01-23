@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Achievements Admin</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 50px auto; }
+    input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+    button { padding: 10px 15px; cursor: pointer; }
+    #login-section, #form-section { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h2>Achievements Admin</h2>
+
+<!-- LOGIN SECTION -->
+<div id="login-section">
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- FORM SECTION -->
+<div id="form-section" style="display:none;">
+  <input id="title" placeholder="Title">
+  <input id="date" type="date">
+  <textarea id="desc" placeholder="Description"></textarea>
+  <input id="image" placeholder="Image URL (or file path)"><br><br>
+  <button onclick="addAchievement()">Add Achievement</button>
+</div>
+
+<script>
+  // ===== LOCAL LOGIN =====
+  const ADMIN_USER = "admin";
+  const ADMIN_PASS = "1234"; // change this
+
+  function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    if(user === ADMIN_USER && pass === ADMIN_PASS) {
+      alert("Login Successful!");
+      document.getElementById("login-section").style.display = "none";
+      document.getElementById("form-section").style.display = "block";
+      loadAchievements();
+    } else {
+      alert("Invalid username or password!");
+    }
+  }
+
+  // ===== LOCAL STORAGE DB =====
+  function loadAchievements() {
+    if(!localStorage.getItem("achievements")) {
+      localStorage.setItem("achievements", JSON.stringify([]));
+    }
+  }
+
+  function addAchievement() {
+    const title = document.getElementById("title").value;
+    const date = document.getElementById("date").value;
+    const desc = document.getElementById("desc").value;
+    const image = document.getElementById("image").value;
+
+    if(!title || !date || !desc || !image) {
+      alert("Please fill all fields!");
+      return;
+    }
+
+    const achievements = JSON.parse(localStorage.getItem("achievements"));
+    achievements.push({ title, date, description: desc, image });
+    localStorage.setItem("achievements", JSON.stringify(achievements));
+
+    alert("Achievement added!");
+    document.getElementById("title").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("desc").value = "";
+    document.getElementById("image").value = "";
+  }
+
+  // ===== EXPORT FUNCTION FOR FRONTEND =====
+  function getAchievements() {
+    return JSON.parse(localStorage.getItem("achievements") || "[]");
+  }
+</script>
+
+</body>
+</html>

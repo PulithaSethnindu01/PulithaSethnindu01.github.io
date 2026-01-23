@@ -60,10 +60,15 @@ function autoHorizontalSlider(containerId, visible = 3) {
   track.classList.add("achievements-track");
   track.innerHTML = "";
 
-  /* 🔥 GET ONLY LATEST 5 BY DATE */
-  const latestAchievements = [...achievements]
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 5);
+// Get all achievements from admin
+const achievements = getAchievements();
+
+// Keep only latest 5 by date
+const latestAchievements = [...achievements]
+  .sort((a, b) => new Date(b.date) - new Date(a.date))
+  .slice(0, 5);
+
+// Then run your existing slider code on latestAchievements
 
   /* Duplicate for infinite loop */
   const data = [

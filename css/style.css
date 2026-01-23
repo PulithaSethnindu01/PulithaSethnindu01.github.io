@@ -90,7 +90,7 @@ small, .text-muted{
   inset: 0;
   z-index: 1;
 
-  background-image: url("../../AstroAnandaLkFnlweb/index/AstroAnandaLk/External_Assets/banner_logo_mystic.png");
+  background-image: url("assets/banner_logo_mystic.png");
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: contain;
