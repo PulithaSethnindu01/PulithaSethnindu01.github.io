@@ -29,10 +29,11 @@
   <button onclick="addAchievement()">Add Achievement</button>
 </div>
 
+<script src="js/achievements-storage.js"></script>
 <script>
   // ===== LOCAL LOGIN =====
   const ADMIN_USER = "admin";
-  const ADMIN_PASS = "1234"; // change this
+  const ADMIN_PASS = "1234";
 
   function login() {
     const user = document.getElementById("username").value;
@@ -42,16 +43,9 @@
       alert("Login Successful!");
       document.getElementById("login-section").style.display = "none";
       document.getElementById("form-section").style.display = "block";
-      loadAchievements();
+      loadAchievements(); // initialize localStorage if empty
     } else {
       alert("Invalid username or password!");
-    }
-  }
-
-  // ===== LOCAL STORAGE DB =====
-  function loadAchievements() {
-    if(!localStorage.getItem("achievements")) {
-      localStorage.setItem("achievements", JSON.stringify([]));
     }
   }
 
@@ -66,22 +60,15 @@
       return;
     }
 
-    const achievements = JSON.parse(localStorage.getItem("achievements"));
-    achievements.push({ title, date, description: desc, image });
-    localStorage.setItem("achievements", JSON.stringify(achievements));
-
+    addAchievementData(title, date, desc, image); // use shared function
     alert("Achievement added!");
     document.getElementById("title").value = "";
     document.getElementById("date").value = "";
     document.getElementById("desc").value = "";
     document.getElementById("image").value = "";
   }
-
-  // ===== EXPORT FUNCTION FOR FRONTEND =====
-  function getAchievements() {
-    return JSON.parse(localStorage.getItem("achievements") || "[]");
-  }
 </script>
+
 
 </body>
 </html>
