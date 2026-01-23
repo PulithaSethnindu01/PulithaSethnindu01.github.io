@@ -1,129 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+
   <title>AstroAnanda - Achievements</title>
 
+  <!-- Mobile first -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="css/bootstrap-4.4.1.css">
+  <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- Dark Sci-Fi CSS Variables -->
-  <style>
-    :root {
-      /* Backgrounds */
-      --bg-main: #070b14;
-      --bg-section: #0e1424;
-      --bg-card: rgba(14,20,36,0.85);
-
-      /* Text */
-      --text-main: #e6ebff;
-      --text-muted: #aab3d6;
-
-      /* Accents */
-      --accent: #6ea8ff;
-      --accent-hover: #4d8dff;
-
-      /* Shadows */
-      --shadow-default: 0 8px 20px rgba(0,0,0,0.4);
-      --shadow-hover: 0 15px 30px rgba(0,0,0,0.6);
-      --glow-neon: 0 0 10px var(--accent), 0 0 20px var(--accent);
-    }
-
-    body {
-      background: var(--bg-main);
-      color: var(--text-main);
-      font-family: "Segoe UI", sans-serif;
-    }
-
-    .section-padding {
-      background: var(--bg-section);
-      padding: 80px 0;
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 50px;
-      text-align: center;
-      text-shadow: var(--glow-neon);
-    }
-
-    /* Achievement Cards */
-    .achievement-card {
-      background: var(--bg-card);
-      border: 2px solid var(--accent);
-      border-radius: 15px;
-      box-shadow: var(--shadow-default);
-      transition: transform 0.3s, box-shadow 0.3s;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .achievement-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-hover);
-    }
-
-    .achievement-card img {
-      border-radius: 10px;
-      width: 100%;
-      height: auto;
-      margin-bottom: 15px;
-    }
-
-    .achievement-card h5 {
-      font-size: 1.2rem;
-      margin-bottom: 5px;
-    }
-
-    .achievement-card small {
-      color: var(--text-muted);
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .achievement-card p {
-      font-size: 0.95rem;
-      margin: 0;
-    }
-
-    /* Optional button */
-    .btn-primary {
-      background-color: var(--accent);
-      border: none;
-      color: var(--text-main);
-    }
-
-    .btn-primary:hover {
-      background-color: var(--accent-hover);
-    }
-  </style>
 </head>
+
 <body>
 
-  <!-- Achievements Section -->
-  <section id="achievements-main" class="section-padding">
-    <div class="container">
-      <h2 class="section-title">All Achievements</h2>
-      <div class="row" id="all-achievements"></div>
-      <div class="text-center mt-4">
-        <a href="index.html" class="btn btn-primary">Back to Home</a>
-      </div>
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container">
+
+    <a class="navbar-brand" href="index.html"><img src="assets/aaa logo.png" width="100px"></a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#board">Board Of Officials</a></li>
+        <li class="nav-item active"><a class="nav-link" href="#">Achievements</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
+      </ul>
     </div>
-  </section>
 
-  <!-- jQuery & Bootstrap JS -->
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap-4.4.1.js"></script>
+  </div>
+</nav>
 
-  <!-- Achievements JS -->
-  <script src="js/achievements.js"></script>
+<!-- ================= HERO ================= -->
+<header class="hero position-relative">
+  <div class="hero-img"></div>
+  <div class="container hero-content text-center">
+    <h1 class="hero-title">Achievements</h1>
+    <p class="hero-subtitle">Explore all the latest accomplishments of the Anandian Astronomical Association</p>
+  </div>
+</header>
+
+<!-- ================= ACHIEVEMENTS GRID ================= -->
+<section class="section-padding" id="all-achievements-section">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">All Achievements</h2>
+    <div class="row" id="all-achievements"></div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer text-center">
+  <div class="container">
+    <p class="mb-0">&copy; 2026 AstroAnanda &copy; All Rights Reserved.</p>
+  </div>
+</footer>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap-4.4.1.js"></script>
+<script src="js/main.js"></script>
+<script src="js/achievements.js"></script>
 
 </body>
 </html>
