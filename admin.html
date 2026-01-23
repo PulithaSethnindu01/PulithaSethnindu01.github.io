@@ -29,44 +29,53 @@
   <button onclick="addAchievement()">Add Achievement</button>
 </div>
 
-<script src="js/achievements-storage.js"></script>
 <script>
-  // ===== LOCAL LOGIN =====
-  const ADMIN_USER = "admin";
-  const ADMIN_PASS = "1234";
+function addAchievement() {
+  const title = document.getElementById("title").value;
+  const date = document.getElementById("date").value;
+  const desc = document.getElementById("desc").value;
+  const fileInput = document.getElementById("image");
 
-  function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-
-    if(user === ADMIN_USER && pass === ADMIN_PASS) {
-      alert("Login Successful!");
-      document.getElementById("login-section").style.display = "none";
-      document.getElementById("form-section").style.display = "block";
-      loadAchievements(); // initialize localStorage if empty
-    } else {
-      alert("Invalid username or password!");
-    }
+  if(!title || !date || !desc || fileInput.files.length === 0) {
+    alert("Please fill all fields and select an image!");
+    return;
   }
 
-  function addAchievement() {
-    const title = document.getElementById("title").value;
-    const date = document.getElementById("date").value;
-    const desc = document.getElementById("desc").value;
-    const image = document.getElementById("image").value;
+  const file = fileInput.files[0];
+  const reader = new FileReader();
 
-    if(!title || !date || !desc || !image) {
-      alert("Please fill all fields!");
-      return;
-    }
+  reader.onload = function(e) {
+    const base64Image = e.target.result;
 
-    addAchievementData(title, date, desc, image); // use shared function
-    alert("Achievement added!");
-    document.getElementById("title").value = "";
-    document.getElementById("date").value = "";
-    document.getElementById("desc").value = "";
-    document.getElementById("image").value = "";
-  }
+    fetch("https://script.google.com/macros/s/AKfycbxc3gGKh1yyCzQkwPO28zGBg0Fh6GrI5o5SwxDoXtfUi0hjA9NDmBvxu-4pNgHl1-lg/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        title: title,
+        date: date,
+        description: desc,
+        imageBase64: base64Image,
+        imageName: file.name
+      }),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.success) {
+        alert("Achievement added successfully!");
+        // Clear form
+        document.getElementById("title").value = "";
+        document.getElementById("date").value = "";
+        document.getElementById("desc").value = "";
+        document.getElementById("image").value = "";
+      } else {
+        alert("Error: " + data.error);
+      }
+    })
+    .catch(err => alert("Request failed: " + err.message));
+  };
+
+  reader.readAsDataURL(file);
+}
 </script>
 
 
