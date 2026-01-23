@@ -1,9 +1,6 @@
-/* =====================
-   FETCH ACHIEVEMENTS FROM WEB APP
-   ===================== */
-
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxc3gGKh1yyCzQkwPO28zGBg0Fh6GrI5o5SwxDoXtfUi0hjA9NDmBvxu-4pNgHl1-lg/exec";
 
+// ===== Fetch achievements from Web App =====
 async function fetchAchievements() {
   try {
     const res = await fetch(WEB_APP_URL);
@@ -15,28 +12,32 @@ async function fetchAchievements() {
   }
 }
 
-/* =====================
-   AUTO HORIZONTAL SLIDER
-   ===================== */
-
-async function autoHorizontalSlider(containerId, visible = 3) {
+// ===== Slider =====
+async function autoHorizontalSlider(containerId) {
   const track = document.getElementById(containerId);
-  if (!track) return;
+  if(!track) return;
 
   const slider = track.parentElement;
   track.classList.add("achievements-track");
   track.innerHTML = "";
 
-  // Fetch achievements from Web App
   const achievements = await fetchAchievements();
-
-  // Keep only latest 5 by date
   const latestAchievements = [...achievements]
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 5);
+    .sort((a,b) => new Date(b.date) - new Date(a.date))
+    .slice(0,5);
+
+  // Determine visible count based on screen width
+  function getVisibleCount() {
+    if(window.innerWidth < 768) return 1;
+    if(window.innerWidth < 992) return 2;
+    return 3;
+  }
+
+  let visibleCount = getVisibleCount();
+  let slideWidth = slider.offsetWidth / visibleCount;
 
   // Duplicate for infinite loop
-  const data = [...latestAchievements, ...latestAchievements.slice(0, visible)];
+  const data = [...latestAchievements, ...latestAchievements.slice(0, visibleCount)];
 
   data.forEach(ach => {
     const slide = document.createElement("div");
@@ -54,95 +55,52 @@ async function autoHorizontalSlider(containerId, visible = 3) {
 
   let index = 0;
   const total = latestAchievements.length;
-  let slideWidth = slider.offsetWidth / visible;
-
-  let autoSlide = setInterval(nextSlide, 3500);
-
-  function nextSlide() {
-    index++;
-    move();
-  }
+  let autoSlide = setInterval(() => { index++; move(); }, 3500);
 
   function move(animate = true) {
     track.style.transition = animate ? "transform 0.6s ease-in-out" : "none";
     track.style.transform = `translateX(-${index * slideWidth}px)`;
-
-    if (index === total) {
-      setTimeout(() => {
-        track.style.transition = "none";
-        track.style.transform = "translateX(0)";
-        index = 0;
-      }, 600);
+    if(index === total) {
+      setTimeout(() => { track.style.transition="none"; track.style.transform="translateX(0)"; index=0; }, 600);
     }
   }
 
-  /* =====================
-     DRAG / SWIPE SUPPORT
-     ===================== */
-
-  let startX = 0;
-  let currentX = 0;
-  let isDragging = false;
-
-  function dragStart(x) {
-    clearInterval(autoSlide);
-    isDragging = true;
-    startX = x;
-    currentX = x;
-    track.style.transition = "none";
-  }
-
-  function dragMove(x) {
-    if (!isDragging) return;
-    currentX = x;
-    const diff = currentX - startX;
-    track.style.transform = `translateX(${-(index * slideWidth) + diff}px)`;
-  }
-
+  // ===== Drag / Swipe =====
+  let startX = 0, currentX = 0, isDragging = false;
+  function dragStart(x) { clearInterval(autoSlide); isDragging=true; startX=x; currentX=x; track.style.transition="none"; }
+  function dragMove(x) { if(!isDragging) return; currentX=x; const diff=currentX-startX; track.style.transform=`translateX(${-(index*slideWidth)+diff}px)`; }
   function dragEnd() {
-    if (!isDragging) return;
-    isDragging = false;
-
-    const diff = currentX - startX;
-
-    if (Math.abs(diff) > slideWidth / 4) {
-      index += diff < 0 ? 1 : -1;
-    }
-
-    if (index < 0) index = 0;
-    if (index > total) index = total;
-
+    if(!isDragging) return;
+    isDragging=false;
+    const diff = currentX-startX;
+    if(Math.abs(diff) > slideWidth/4) index += diff<0 ? 1 : -1;
+    if(index<0) index=0;
+    if(index>total) index=total;
     move();
-    autoSlide = setInterval(nextSlide, 3500);
+    autoSlide=setInterval(()=>{index++; move();},3500);
   }
 
-  /* Mouse events */
-  slider.addEventListener("mousedown", e => dragStart(e.pageX));
-  window.addEventListener("mousemove", e => dragMove(e.pageX));
+  slider.addEventListener("mousedown", e=>dragStart(e.pageX));
+  window.addEventListener("mousemove", e=>dragMove(e.pageX));
   window.addEventListener("mouseup", dragEnd);
-
-  /* Touch events */
-  slider.addEventListener("touchstart", e => dragStart(e.touches[0].pageX), { passive: true });
-  slider.addEventListener("touchmove", e => dragMove(e.touches[0].pageX), { passive: true });
+  slider.addEventListener("touchstart", e=>dragStart(e.touches[0].pageX), {passive:true});
+  slider.addEventListener("touchmove", e=>dragMove(e.touches[0].pageX), {passive:true});
   slider.addEventListener("touchend", dragEnd);
 
-  /* Resize fix */
+  // ===== Resize =====
   window.addEventListener("resize", () => {
-    slideWidth = slider.offsetWidth / visible;
+    visibleCount = getVisibleCount();
+    slideWidth = slider.offsetWidth / visibleCount;
     move(false);
   });
 }
 
-/* =========================
-   ACHIEVEMENTS GRID (Optional)
-   ========================= */
-
+// ===== Grid =====
 async function loadAllAchievements(containerId) {
   const container = document.getElementById(containerId);
-  if (!container) return;
+  if(!container) return;
 
   container.innerHTML = "";
-
   const achievements = await fetchAchievements();
 
   achievements.forEach(ach => {
@@ -150,20 +108,18 @@ async function loadAllAchievements(containerId) {
     col.className = "col-md-4 mb-4";
     col.innerHTML = `
       <div class="achievement-card">
-        <img src="${ach.image}" draggable="false">
+        <img src="${ach.image}" class="mb-3" draggable="false">
         <h5>${ach.title}</h5>
-        <small>${ach.date}</small>
-        <p>${ach.description}</p>
+        <small class="text-muted">${ach.date}</small>
+        <p class="small mt-2">${ach.description}</p>
       </div>
     `;
     container.appendChild(col);
   });
 }
 
-/* =====================
-   DOMContentLoaded INIT
-   ===================== */
+// ===== Initialize =====
 document.addEventListener("DOMContentLoaded", () => {
-  autoHorizontalSlider("latest-achievements-home", 3);
+  autoHorizontalSlider("latest-achievements-home");
   loadAllAchievements("all-achievements");
 });
