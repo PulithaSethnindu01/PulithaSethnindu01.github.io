@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Achievements Admin</title>
-  <style>
-    body { font-family: sans-serif; max-width: 500px; margin: 50px auto; }
-    input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
-    button { padding: 10px 15px; cursor: pointer; }
-    #login-section, #form-section { margin-top: 20px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achievements Admin</title>
+<style>
+  body { font-family: sans-serif; max-width: 600px; margin: 50px auto; background:#070b14; color:#e6ebff; }
+  input, textarea, button { width: 100%; margin-bottom: 10px; padding: 10px; border-radius:5px; border:none; }
+  button { cursor:pointer; background:#6ea8ff; color:#070b14; font-weight:600; }
+  button:hover { background:#4d8dff; color:white; }
+  #login-section, #form-section { margin-top:20px; background:#0e1424; padding:20px; border-radius:10px; }
+</style>
 </head>
 <body>
 
@@ -25,73 +28,70 @@
   <input id="title" placeholder="Title">
   <input id="date" type="date">
   <textarea id="desc" placeholder="Description"></textarea>
-  <input type="file" id="image" accept="image/*"><br><br>
+  <input type="file" id="image"><br>
   <button onclick="addAchievement()">Add Achievement</button>
 </div>
 
 <script>
+  // ===== CONFIG =====
   const ADMIN_USER = "admin";
-  const ADMIN_PASS = "1234"; // change if needed
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxc3gGKh1yyCzQkwPO28zGBg0Fh6GrI5o5SwxDoXtfUi0hjA9NDmBvxu-4pNgHl1-lg/exec";
+  const ADMIN_PASS = "1234";  // Change this
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzOyuiJl93ggvu7wlWNQXCcC__oXWxjlTLchMa8P39RSa9FHfMvmvSRzvlstRbqjgwp/exec"; // replace with your deployed Web App URL
 
   // ===== LOGIN =====
   function login() {
     const user = document.getElementById("username").value;
     const pass = document.getElementById("password").value;
-
-    if(user === ADMIN_USER && pass === ADMIN_PASS) {
-      document.getElementById("login-section").style.display = "none";
-      document.getElementById("form-section").style.display = "block";
-      alert("Login successful!");
+    if(user === ADMIN_USER && pass === ADMIN_PASS){
+      alert("Login Successful!");
+      document.getElementById("login-section").style.display="none";
+      document.getElementById("form-section").style.display="block";
     } else {
       alert("Invalid username or password!");
     }
   }
 
   // ===== ADD ACHIEVEMENT =====
-  function addAchievement() {
+  async function addAchievement() {
     const title = document.getElementById("title").value;
     const date = document.getElementById("date").value;
     const desc = document.getElementById("desc").value;
     const fileInput = document.getElementById("image");
+    const file = fileInput.files[0];
 
-    if(!title || !date || !desc || fileInput.files.length === 0) {
-      alert("Please fill all fields and select an image!");
+    if(!title || !date || !desc || !file){
+      alert("Fill all fields!");
       return;
     }
 
-    const file = fileInput.files[0];
+    // Convert file to Base64
     const reader = new FileReader();
+    reader.onload = async function(){
+      const base64 = reader.result.split(",")[1]; // remove prefix
+      const formData = new URLSearchParams();
+      formData.append("title", title);
+      formData.append("date", date);
+      formData.append("description", desc);
+      formData.append("fileBase64", base64);
+      formData.append("fileName", file.name);
+      formData.append("fileType", file.type);
 
-    reader.onload = function(e) {
-      const base64Image = e.target.result;
-
-      fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          title: title,
-          date: date,
-          description: desc,
-          imageBase64: base64Image,
-          imageName: file.name
-        }),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.success) {
-          alert("Achievement added successfully!");
-          document.getElementById("title").value = "";
-          document.getElementById("date").value = "";
-          document.getElementById("desc").value = "";
-          document.getElementById("image").value = "";
+      try {
+        const res = await fetch(WEB_APP_URL, { method:"POST", body:formData });
+        const data = await res.json();
+        if(data.status === "success"){
+          alert("Achievement added!\nImage URL: "+data.imageUrl);
+          document.getElementById("title").value="";
+          document.getElementById("date").value="";
+          document.getElementById("desc").value="";
+          fileInput.value="";
         } else {
-          alert("Error: " + data.error);
+          alert("Error: "+data.message);
         }
-      })
-      .catch(err => alert("Request failed: " + err.message));
-    };
-
+      } catch(err){
+        alert("Failed to connect to Web App: "+err.message);
+      }
+    }
     reader.readAsDataURL(file);
   }
 </script>
