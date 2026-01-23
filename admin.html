@@ -36,7 +36,7 @@
   // ===== CONFIG =====
   const ADMIN_USER = "admin";
   const ADMIN_PASS = "1234";  // Change this
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-CyqNqFmasI3Z9TGNMu_upcHFmIb8V9T_PdPDt0ctvR0LBmPS2kRDUjaJyI9fs1yN/exec"; // replace with your deployed Web App URL
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwoL50mUUsY-zMd0O-Q2464TzWKYBW07CwPF9rS9Xx5zu6RLh6V4S4JTj5cKqI3ktYa/exec"; 
 
   // ===== LOGIN =====
   function login() {
@@ -64,11 +64,11 @@
       return;
     }
 
-    // Convert file to Base64
     const reader = new FileReader();
     reader.onload = async function(){
       const base64 = reader.result.split(",")[1]; // remove prefix
-      const formData = new URLSearchParams();
+
+      const formData = new FormData();
       formData.append("title", title);
       formData.append("date", date);
       formData.append("description", desc);
@@ -77,21 +77,27 @@
       formData.append("fileType", file.type);
 
       try {
-        const res = await fetch(WEB_APP_URL, { method:"POST", body:formData });
+        const res = await fetch(WEB_APP_URL, {
+          method: "POST",
+          body: formData,
+        });
+
         const data = await res.json();
         if(data.status === "success"){
-          alert("Achievement added!\nImage URL: "+data.imageUrl);
+          alert("Achievement added!\nImage URL: " + data.imageUrl);
           document.getElementById("title").value="";
           document.getElementById("date").value="";
           document.getElementById("desc").value="";
           fileInput.value="";
         } else {
-          alert("Error: "+data.message);
+          alert("Error: " + data.message);
         }
+
       } catch(err){
-        alert("Failed to connect to Web App: "+err.message);
+        alert("Failed to connect to Web App: " + err.message);
       }
     }
+
     reader.readAsDataURL(file);
   }
 </script>
