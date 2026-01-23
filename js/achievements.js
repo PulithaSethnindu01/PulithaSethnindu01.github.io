@@ -44,7 +44,7 @@ async function autoHorizontalSlider(containerId, visible = 3) {
     slide.className = "achievement-slide";
     slide.innerHTML = `
       <div class="achievement-card p-3">
-        <img src="${imgSrc}" class="mb-3" draggable="false" alt="${ach.title}">
+        <img src="https://drive.google.com/uc?export=view&id=14i9SseU_WTqjQ86BHorTmE2kJXp36-GB" class="mb-3" draggable="false" alt="${ach.title}">
         <h6>${ach.title}</h6>
         <small class="text-muted">${ach.date}</small>
         <p class="small mt-2">${ach.description}</p>
