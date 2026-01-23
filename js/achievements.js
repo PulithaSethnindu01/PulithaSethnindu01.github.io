@@ -4,7 +4,9 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyr8a8j6MSfYy1NBYHR
 async function fetchAchievements() {
   try {
     const res = await fetch(WEB_APP_URL);
-    return await res.json();
+    const data = await res.json();
+    console.log("Achievements fetched:", data);
+    return Array.isArray(data) ? data : [];
   } catch(err) {
     console.error("Failed to fetch achievements:", err);
     return [];
@@ -20,13 +22,15 @@ async function autoHorizontalSlider(containerId, visible=3){
   track.innerHTML = "";
 
   const achievements = await fetchAchievements();
+  if(achievements.length===0) return;
+
   const latest = [...achievements].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
   const data = [...latest, ...latest.slice(0,visible)];
 
   data.forEach(ach=>{
     const slide = document.createElement("div");
     slide.className="achievement-slide";
-    slide.innerHTML=`
+    slide.innerHTML = `
       <div class="achievement-card p-3">
         <img src="${ach.image}" class="mb-3" draggable="false">
         <h6>${ach.title}</h6>
@@ -40,13 +44,13 @@ async function autoHorizontalSlider(containerId, visible=3){
   let autoSlide=setInterval(()=>{index++; move();},3500);
 
   function move(animate=true){
-    track.style.transition=animate?"transform 0.6s ease-in-out":"none";
-    track.style.transform=`translateX(-${index*slideWidth}px)`;
+    track.style.transition = animate?"transform 0.6s ease-in-out":"none";
+    track.style.transform = `translateX(-${index*slideWidth}px)`;
     if(index===total) setTimeout(()=>{track.style.transition="none"; track.style.transform="translateX(0)"; index=0;},600);
   }
 
   // Drag / Swipe
-  let startX=0,currentX=0,isDragging=false;
+  let startX=0, currentX=0, isDragging=false;
   function dragStart(x){clearInterval(autoSlide); isDragging=true; startX=x; currentX=x; track.style.transition="none";}
   function dragMove(x){if(!isDragging) return; currentX=x; const diff=currentX-startX; track.style.transform=`translateX(${-(index*slideWidth)+diff}px)`;}
   function dragEnd(){if(!isDragging) return; isDragging=false; const diff=currentX-startX; if(Math.abs(diff)>slideWidth/4) index+=diff<0?1:-1; if(index<0) index=0; if(index>total) index=total; move(); autoSlide=setInterval(()=>{index++; move();},3500);}
@@ -62,14 +66,14 @@ async function autoHorizontalSlider(containerId, visible=3){
 
 // ===== GRID =====
 async function loadAllAchievements(containerId){
-  const container=document.getElementById(containerId);
+  const container = document.getElementById(containerId);
   if(!container) return;
-  container.innerHTML="";
+  container.innerHTML = "";
   const achievements = await fetchAchievements();
   achievements.forEach(ach=>{
-    const col=document.createElement("div");
-    col.className="col-md-4 mb-4";
-    col.innerHTML=`<div class="achievement-card">
+    const col = document.createElement("div");
+    col.className = "col-md-4 mb-4";
+    col.innerHTML = `<div class="achievement-card">
       <img src="${ach.image}" draggable="false">
       <h5>${ach.title}</h5>
       <small>${ach.date}</small>
@@ -79,8 +83,8 @@ async function loadAllAchievements(containerId){
   });
 }
 
-// ===== INIT ON DOM LOAD =====
-document.addEventListener("DOMContentLoaded",()=>{
+// ===== INIT =====
+document.addEventListener("DOMContentLoaded", ()=>{
   autoHorizontalSlider("latest-achievements-home",3);
   loadAllAchievements("all-achievements");
 });
