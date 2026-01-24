@@ -1,5 +1,5 @@
 // ===== CONFIG =====
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwkgcDYEml2kmK--NedMKwZUEfV5pwR3AXvw6GaJXWAQYMFlVogwrVTsEdMnhNgnAGU/exec"; // Replace with your Web App URL
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyn7b1U_W_BdnbkxvXSOychIrxbrZidnUi_XXs6KEn27GqO_c7IjcktmsIJf-MDy3BD/exec"; // Replace with your Web App URL
 
 // ===== FETCH ACHIEVEMENTS =====
 async function fetchAchievements() {

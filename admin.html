@@ -10,33 +10,38 @@
   button { cursor:pointer; background:#6ea8ff; color:#070b14; font-weight:600; }
   button:hover { background:#4d8dff; color:white; }
   #login-section, #form-section { margin-top:20px; background:#0e1424; padding:20px; border-radius:10px; }
+  #progress { margin-bottom: 10px; color: #6ea8ff; display: none; }
 </style>
 </head>
 <body>
 
 <h2>Achievements Admin</h2>
 
-<!-- LOGIN -->
+<!-- LOGIN SECTION -->
 <div id="login-section">
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
   <button onclick="login()">Login</button>
 </div>
 
-<!-- FORM -->
+<!-- FORM SECTION -->
 <div id="form-section" style="display:none;">
   <input id="title" placeholder="Title">
   <input id="date" type="date">
   <textarea id="desc" placeholder="Description"></textarea>
   <input type="file" id="image"><br>
+  <div id="progress">Uploading...</div>
   <button onclick="addAchievement()">Add Achievement</button>
 </div>
 
 <script>
   // ===== CONFIG =====
-  const ADMIN_USER = "admin";
-  const ADMIN_PASS = "1234"; // Change this
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwkgcDYEml2kmK--NedMKwZUEfV5pwR3AXvw6GaJXWAQYMFlVogwrVTsEdMnhNgnAGU/exec";
+  const ADMIN_USER = "admin"; // change as needed
+  const ADMIN_PASS = "1234";  // change as needed
+
+  const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dpwzcrxlr/image/upload"; 
+  const UPLOAD_PRESET = "Pr4Yn8gbsxPbzO7Uy25Xjb7kZjE"; 
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyn7b1U_W_BdnbkxvXSOychIrxbrZidnUi_XXs6KEn27GqO_c7IjcktmsIJf-MDy3BD/exec"; 
 
   // ===== LOGIN =====
   function login() {
@@ -64,38 +69,50 @@
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = async function(){
-      const base64 = reader.result.split(",")[1];
+    document.getElementById("progress").style.display = "block";
 
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("date", date);
-      formData.append("description", desc);
-      formData.append("fileBase64", base64);
-      formData.append("fileName", file.name);
+    // Upload to Cloudinary
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
 
-      try {
-        const res = await fetch(WEB_APP_URL, {
-          method: "POST",
-          body: formData
-        });
-        const data = await res.json();
+    try {
+      const cloudRes = await fetch(CLOUDINARY_URL, { method:"POST", body:formData });
+      const cloudData = await cloudRes.json();
 
-        if(data.status === "success"){
-          alert("Achievement added!\nImage URL: " + data.imageUrl);
-          document.getElementById("title").value="";
-          document.getElementById("date").value="";
-          document.getElementById("desc").value="";
-          fileInput.value="";
-        } else {
-          alert("Error: " + data.message);
-        }
-      } catch(err){
-        alert("Failed to connect: " + err.message);
+      if(!cloudData.secure_url){
+        alert("Cloudinary upload failed!");
+        document.getElementById("progress").style.display = "none";
+        return;
       }
+
+      const imageUrl = cloudData.secure_url;
+
+      // Send to Google Sheet via Web App
+      const sheetData = new FormData();
+      sheetData.append("title", title);
+      sheetData.append("date", date);
+      sheetData.append("description", desc);
+      sheetData.append("image", imageUrl);
+
+      const sheetRes = await fetch(WEB_APP_URL, { method:"POST", body: sheetData });
+      const sheetJson = await sheetRes.json();
+
+      if(sheetJson.status === "success"){
+        alert("Achievement added successfully!");
+        document.getElementById("title").value = "";
+        document.getElementById("date").value = "";
+        document.getElementById("desc").value = "";
+        fileInput.value = "";
+      } else {
+        alert("Error saving to Sheet: " + sheetJson.message);
+      }
+
+    } catch(err){
+      alert("Error: " + err.message);
+    } finally {
+      document.getElementById("progress").style.display = "none";
     }
-    reader.readAsDataURL(file);
   }
 </script>
 
