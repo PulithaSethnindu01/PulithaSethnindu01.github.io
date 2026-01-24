@@ -1,4 +1,4 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwHBfow99HXPMFmqtNtlkzw1aCiZ0XpgO-DpdadBsAnjzY3bmjxqWEfI2GZNcj5hRov/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxjc1g6keTKm4rwNIh9NhwABYDAY0yBX37LGw76SoKC8hFbllxB7dwkTxjXj0eahmQ/exec";
 
 // ===== FETCH ACHIEVEMENTS =====
 async function fetchAchievements() {
@@ -39,18 +39,22 @@ async function autoHorizontalSlider(containerId, visible = 3) {
   const data = [...latest, ...latest.slice(0, visible)];
 
   data.forEach(ach => {
-    const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image"; // fallback
-    const slide = document.createElement("div");
-    slide.className = "achievement-slide";
-    slide.innerHTML = `
-      <div class="achievement-card p-3">
-        <img src="${imgSrc}" class="mb-3" draggable="false" alt="${ach.title}">
-        <h6>${ach.title}</h6>
-        <small class="text-muted">${ach.date}</small>
-        <p class="small mt-2">${ach.description}</p>
-      </div>`;
-    track.appendChild(slide);
-  });
+  const imgSrc = ach.image
+    ? `${WEB_APP_URL}?img=${ach.image}`
+    : "https://via.placeholder.com/300x200?text=No+Image";
+
+  const slide = document.createElement("div");
+  slide.className = "achievement-slide";
+  slide.innerHTML = `
+    <div class="achievement-card p-3">
+      <img src="${imgSrc}" class="mb-3" draggable="false" alt="${ach.title}">
+      <h6>${ach.title}</h6>
+      <small class="text-muted">${ach.date}</small>
+      <p class="small mt-2">${ach.description}</p>
+    </div>`;
+  track.appendChild(slide);
+});
+
 
   let index = 0, total = latest.length, slideWidth = slider.offsetWidth / visible;
   let autoSlide = setInterval(() => { index++; move(); }, 3500);
@@ -91,20 +95,27 @@ async function loadAllAchievements(containerId) {
   if (!container) return;
   container.innerHTML = "";
 
-  const achievements = await fetchAchievements();
-  achievements.forEach((ach, i) => {
-    const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image"; // fallback
+  const achievements = await fetchAchievements(); // ✅ MISSING LINE
+  if (achievements.length === 0) return;
+
+  achievements.forEach(ach => {
+    const imgSrc = ach.image
+      ? `${WEB_APP_URL}?img=${ach.image}`
+      : "https://via.placeholder.com/300x200?text=No+Image";
+
     const col = document.createElement("div");
     col.className = "col-md-4 mb-4";
-    col.innerHTML = `<div class="achievement-card">
-      <img src="${imgSrc}" draggable="false" alt="${ach.title}">
-      <h5>${ach.title}</h5>
-      <small>${ach.date}</small>
-      <p>${ach.description}</p>
-    </div>`;
+    col.innerHTML = `
+      <div class="achievement-card">
+        <img src="${imgSrc}" draggable="false" alt="${ach.title}">
+        <h5>${ach.title}</h5>
+        <small>${ach.date}</small>
+        <p>${ach.description}</p>
+      </div>`;
     container.appendChild(col);
   });
 }
+
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
