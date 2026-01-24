@@ -16,14 +16,14 @@
 
 <h2>Achievements Admin</h2>
 
-<!-- LOGIN SECTION -->
+<!-- LOGIN -->
 <div id="login-section">
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
   <button onclick="login()">Login</button>
 </div>
 
-<!-- FORM SECTION -->
+<!-- FORM -->
 <div id="form-section" style="display:none;">
   <input id="title" placeholder="Title">
   <input id="date" type="date">
@@ -35,8 +35,8 @@
 <script>
   // ===== CONFIG =====
   const ADMIN_USER = "admin";
-  const ADMIN_PASS = "1234";  // Change this
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxjc1g6keTKm4rwNIh9NhwABYDAY0yBX37LGw76SoKC8hFbllxB7dwkTxjXj0eahmQ/exec"; 
+  const ADMIN_PASS = "1234"; // Change this
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwkgcDYEml2kmK--NedMKwZUEfV5pwR3AXvw6GaJXWAQYMFlVogwrVTsEdMnhNgnAGU/exec";
 
   // ===== LOGIN =====
   function login() {
@@ -66,7 +66,7 @@
 
     const reader = new FileReader();
     reader.onload = async function(){
-      const base64 = reader.result.split(",")[1]; // remove prefix
+      const base64 = reader.result.split(",")[1];
 
       const formData = new FormData();
       formData.append("title", title);
@@ -74,15 +74,14 @@
       formData.append("description", desc);
       formData.append("fileBase64", base64);
       formData.append("fileName", file.name);
-      formData.append("fileType", file.type);
 
       try {
         const res = await fetch(WEB_APP_URL, {
           method: "POST",
-          body: formData,
+          body: formData
         });
-
         const data = await res.json();
+
         if(data.status === "success"){
           alert("Achievement added!\nImage URL: " + data.imageUrl);
           document.getElementById("title").value="";
@@ -92,12 +91,10 @@
         } else {
           alert("Error: " + data.message);
         }
-
       } catch(err){
-        alert("Failed to connect to Web App: " + err.message);
+        alert("Failed to connect: " + err.message);
       }
     }
-
     reader.readAsDataURL(file);
   }
 </script>

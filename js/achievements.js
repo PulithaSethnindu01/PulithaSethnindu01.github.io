@@ -1,4 +1,5 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxjc1g6keTKm4rwNIh9NhwABYDAY0yBX37LGw76SoKC8hFbllxB7dwkTxjXj0eahmQ/exec";
+// ===== CONFIG =====
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwkgcDYEml2kmK--NedMKwZUEfV5pwR3AXvw6GaJXWAQYMFlVogwrVTsEdMnhNgnAGU/exec"; // Replace with your Web App URL
 
 // ===== FETCH ACHIEVEMENTS =====
 async function fetchAchievements() {
@@ -35,34 +36,40 @@ async function autoHorizontalSlider(containerId, visible = 3) {
   const achievements = await fetchAchievements();
   if (achievements.length === 0) return;
 
-  const latest = [...achievements].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+  const latest = [...achievements]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 5);
+
   const data = [...latest, ...latest.slice(0, visible)];
 
   data.forEach(ach => {
-  const imgSrc = ach.image
-    ? `${WEB_APP_URL}?img=${ach.image}`
-    : "https://via.placeholder.com/300x200?text=No+Image";
+    const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image";
 
-  const slide = document.createElement("div");
-  slide.className = "achievement-slide";
-  slide.innerHTML = `
-    <div class="achievement-card p-3">
-      <img src="${imgSrc}" class="mb-3" draggable="false" alt="${ach.title}">
-      <h6>${ach.title}</h6>
-      <small class="text-muted">${ach.date}</small>
-      <p class="small mt-2">${ach.description}</p>
-    </div>`;
-  track.appendChild(slide);
-});
+    const slide = document.createElement("div");
+    slide.className = "achievement-slide";
+    slide.innerHTML = `
+      <div class="achievement-card p-3">
+        <img src="${imgSrc}" class="mb-3" draggable="false" alt="${ach.title}">
+        <h6>${ach.title}</h6>
+        <small class="text-muted">${ach.date}</small>
+        <p class="small mt-2">${ach.description}</p>
+      </div>`;
+    track.appendChild(slide);
+  });
 
-
-  let index = 0, total = latest.length, slideWidth = slider.offsetWidth / visible;
+  let index = 0,
+      total = latest.length,
+      slideWidth = slider.offsetWidth / visible;
   let autoSlide = setInterval(() => { index++; move(); }, 3500);
 
   function move(animate = true) {
     track.style.transition = animate ? "transform 0.6s ease-in-out" : "none";
     track.style.transform = `translateX(-${index * slideWidth}px)`;
-    if (index === total) setTimeout(() => { track.style.transition = "none"; track.style.transform = "translateX(0)"; index = 0; }, 600);
+    if (index === total) setTimeout(() => {
+      track.style.transition = "none";
+      track.style.transform = "translateX(0)";
+      index = 0;
+    }, 600);
   }
 
   // Drag / Swipe
@@ -95,13 +102,10 @@ async function loadAllAchievements(containerId) {
   if (!container) return;
   container.innerHTML = "";
 
-  const achievements = await fetchAchievements(); // ✅ MISSING LINE
-  if (achievements.length === 0) return;
+  const achievements = await fetchAchievements();
 
-  achievements.forEach(ach => {
-    const imgSrc = ach.image
-      ? `${WEB_APP_URL}?img=${ach.image}`
-      : "https://via.placeholder.com/300x200?text=No+Image";
+  achievements.forEach((ach) => {
+    const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image";
 
     const col = document.createElement("div");
     col.className = "col-md-4 mb-4";
@@ -115,7 +119,6 @@ async function loadAllAchievements(containerId) {
     container.appendChild(col);
   });
 }
-
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
