@@ -74,3 +74,19 @@ window.addEventListener('scroll', () => {
   window.addEventListener("load", function() {
     document.body.classList.add("loaded");
   });
+
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const password = document.getElementById('password').value;
+  const confirm = document.getElementById('confirmPassword').value;
+  const message = document.getElementById('registerMessage');
+
+  if(password !== confirm) {
+    message.innerHTML = '<div class="alert alert-danger">Passwords do not match!</div>';
+    return;
+  }
+
+  // If connected to backend, submit form data here
+  message.innerHTML = '<div class="alert alert-success">Registered successfully!</div>';
+  this.reset();
+});
