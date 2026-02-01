@@ -1,5 +1,6 @@
 // ===== CONFIG =====
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyn7b1U_W_BdnbkxvXSOychIrxbrZidnUi_XXs6KEn27GqO_c7IjcktmsIJf-MDy3BD/exec"; // Replace with your Web App URL
+const WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbyn7b1U_W_BdnbkxvXSOychIrxbrZidnUi_XXs6KEn27GqO_c7IjcktmsIJf-MDy3BD/exec";
 
 // ===== FETCH ACHIEVEMENTS =====
 async function fetchAchievements() {
@@ -120,8 +121,42 @@ async function loadAllAchievements(containerId) {
   });
 }
 
-// ===== INIT =====
-document.addEventListener("DOMContentLoaded", () => {
-  autoHorizontalSlider("latest-achievements-home", 3);
-  loadAllAchievements("all-achievements");
-});
+// ===== MAIN LOADER (SPINNER FIXED) =====
+async function loadAchievementsWithSpinner() {
+  const spinner = document.getElementById("achievements-spinner");
+  const sliderWrapper = document.querySelector(".achievements-slider"); // wrapper div
+  const sliderContainer = document.getElementById("latest-achievements-home");
+  const gridContainer = document.getElementById("all-achievements"); // may be null on home
+
+  if (!spinner || !sliderWrapper || !sliderContainer) {
+    console.error("Required achievements elements missing");
+    return;
+  }
+
+  // Show spinner over the section, hide slider/grid
+  spinner.style.display = "flex";
+  spinner.style.justifyContent = "center";
+  spinner.style.alignItems = "center";
+  spinner.style.height = "200px";
+
+  sliderWrapper.style.display = "none";
+  if (gridContainer) gridContainer.style.display = "none";
+
+  try {
+    autoHorizontalSlider("latest-achievements-home", 3);
+
+    if (gridContainer) {
+      await loadAllAchievements("all-achievements");
+    }
+
+  } catch (err) {
+    console.error("Failed to load achievements:", err);
+  } finally {
+    spinner.style.display = "none";
+    sliderWrapper.style.display = "block";
+    if (gridContainer) gridContainer.style.display = "block";
+  }
+}
+
+// Init
+document.addEventListener("DOMContentLoaded", loadAchievementsWithSpinner);

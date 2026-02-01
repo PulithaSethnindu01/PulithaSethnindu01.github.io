@@ -69,3 +69,8 @@ window.addEventListener('scroll', () => {
   window.addEventListener('scroll', updateParallax);
   window.addEventListener('resize', updateParallax);
 })();
+
+// Remove loader when page fully loaded
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
