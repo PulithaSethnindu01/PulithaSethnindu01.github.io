@@ -1,92 +1,121 @@
-// Smooth scroll with navbar offset
+// ===============================
+// Smooth Scroll (Navbar Offset)
+// ===============================
 $('a[href^="#"]').on('click', function (e) {
-  var target = $(this.getAttribute('href'));
+  const target = $(this.getAttribute('href'));
 
-  if (target.length) {
-    e.preventDefault();
+  if (!target.length) return;
 
-    $('html, body').stop().animate({
+  e.preventDefault();
+
+  $('html, body').stop().animate(
+    {
       scrollTop: target.offset().top - 70
-    }, 700);
-  }
+    },
+    700
+  );
 });
 
-// ===== SERIOUS PARALLAX =====
-(function () {
-  var parallax = document.querySelector('.parallax-bg');
-  if (!parallax) return;
 
-  var speed = 0.35; // lower = slower, smoother
+// ===============================
+// Parallax + Stats Counter
+// ===============================
+(function () {
+  const parallax = document.querySelector('.parallax-bg');
+  const statsSection = document.getElementById('stats');
+  const counters = document.querySelectorAll('.stat-number');
+
+  if (!parallax && !statsSection) return;
+
+  const parallaxSpeed = 0.35;
+  let countersStarted = false;
 
   function updateParallax() {
-    var scrolled = window.pageYOffset;
-    var sectionTop = parallax.parentElement.offsetTop;
-    var sectionHeight = parallax.parentElement.offsetHeight;
+    if (!parallax) return;
+
+    const scrolled = window.pageYOffset;
+    const parent = parallax.parentElement;
+
+    const sectionTop = parent.offsetTop;
+    const sectionHeight = parent.offsetHeight;
 
     if (
       scrolled + window.innerHeight > sectionTop &&
       scrolled < sectionTop + sectionHeight
     ) {
-      var yPos = (scrolled - sectionTop) * speed;
-      parallax.style.transform = 'translate3d(0,' + yPos + 'px,0)';
+      const yPos = (scrolled - sectionTop) * parallaxSpeed;
+      parallax.style.transform = `translate3d(0, ${yPos}px, 0)`;
     }
   }
-	
-	const counters = document.querySelectorAll('.stat-number');
-let started = false;
 
-function startCounters() {
-  if (started) return;
-  started = true;
+  function startCounters() {
+    if (countersStarted || !counters.length) return;
+    countersStarted = true;
 
-  counters.forEach(counter => {
-    const target = +counter.getAttribute('data-count');
-    let count = 0;
-    const speed = target / 100;
+    counters.forEach(counter => {
+      const target = Number(counter.dataset.count);
+      let current = 0;
+      const step = target / 120;
 
-    const update = () => {
-      if (count < target) {
-        count += speed;
-        counter.innerText = Math.ceil(count);
-        requestAnimationFrame(update);
-      } else {
-        counter.innerText = target;
+      function update() {
+        if (current < target) {
+          current += step;
+          counter.textContent = Math.ceil(current);
+          requestAnimationFrame(update);
+        } else {
+          counter.textContent = target;
+        }
       }
-    };
-    update();
-  });
-}
 
-// Trigger when section is visible
-window.addEventListener('scroll', () => {
-  const section = document.getElementById('stats');
-  const rect = section.getBoundingClientRect();
-  if (rect.top < window.innerHeight - 100) {
-    startCounters();
+      update();
+    });
   }
-});
 
-  window.addEventListener('scroll', updateParallax);
+  function onScroll() {
+    updateParallax();
+
+    if (!statsSection) return;
+
+    const rect = statsSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 100) {
+      startCounters();
+    }
+  }
+
+  window.addEventListener('scroll', onScroll);
   window.addEventListener('resize', updateParallax);
 })();
 
-// Remove loader when page fully loaded
-  window.addEventListener("load", function() {
-    document.body.classList.add("loaded");
-  });
 
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const password = document.getElementById('password').value;
-  const confirm = document.getElementById('confirmPassword').value;
-  const message = document.getElementById('registerMessage');
-
-  if(password !== confirm) {
-    message.innerHTML = '<div class="alert alert-danger">Passwords do not match!</div>';
-    return;
-  }
-
-  // If connected to backend, submit form data here
-  message.innerHTML = '<div class="alert alert-success">Registered successfully!</div>';
-  this.reset();
+// ===============================
+// Page Loader
+// ===============================
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
 });
+
+
+// ===============================
+// Register Form
+// ===============================
+const registerForm = document.getElementById('registerForm');
+
+if (registerForm) {
+  registerForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const message = document.getElementById('registerMessage');
+
+    if (password !== confirm) {
+      message.innerHTML = `<div class="alert alert-danger">Passwords do not match!</div>`;
+      return;
+    }
+
+    // Backend submit goes here later
+
+    message.innerHTML = `<div class="alert alert-success">Registered successfully!</div>`;
+    this.reset();
+  });
+}

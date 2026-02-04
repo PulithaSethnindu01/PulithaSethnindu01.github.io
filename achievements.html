@@ -3,66 +3,94 @@
 <head>
   <meta charset="utf-8">
 
-  <title>AstroAnanda - Achievements</title>
+  <title>AstroAnanda | Achievements</title>
 
   <!-- Mobile first -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
+  <link rel="icon" href="assets/favicon_AAA.png" type="image/png">
+
+  <!-- Bootstrap CSS (Dreamweaver local file) -->
   <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Font Awesome 5 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
 
-<!-- ================= NAVBAR ================= -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-  <div class="container">
-
-    <a class="navbar-brand" href="index.html"><img src="assets/aaa logo.png" width="100px"></a>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="index.html#board">Board Of Officials</a></li>
-        <li class="nav-item active"><a class="nav-link" href="#">Achievements</a></li>
-        <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
-      </ul>
-    </div>
-
-  </div>
-</nav>
-
-<!-- ================= HERO ================= -->
+    <!-- ================= HERO SECTION ================= -->
 <header class="hero position-relative">
+  
   <div class="hero-img"></div>
+
+  <!-- Star background canvas (we’ll animate later) -->
+  <div id="starfield"></div>
+
   <div class="container hero-content text-center">
     <h1 class="hero-title">Achievements</h1>
-    <p class="hero-subtitle">Explore all the latest accomplishments of the Anandian Astronomical Association</p>
+    <p class="hero-subtitle">
+      Anandian Astronomical Association
+    </p>
+
+    <div class="hero-buttons mt-4">
+      <a href="index.html" class="btn btn-outline-light btn-lg mr-2"><i class="fas fa-arrow-left"></i> Return Home</a>
+    </div>
   </div>
+
 </header>
+
 
 <!-- ================= ACHIEVEMENTS GRID ================= -->
 <section class="section-padding" id="all-achievements-section">
   <div class="container">
     <h2 class="section-title text-center mb-5">All Achievements</h2>
+    <div id="achievement-year-pills" class="text-center mb-4"></div>
     <div class="row" id="all-achievements"></div>
   </div>
 </section>
 
 <!-- ================= FOOTER ================= -->
-<footer class="footer text-center">
+<footer class="container pt-4 pb-4 text-center">
   <div class="container">
-    <p class="mb-0">&copy; 2026 AstroAnanda &copy; All Rights Reserved.</p>
+    <!-- Logo -->
+    <div class="mb-2">
+      <img src="assets/aaa logo.png" alt="AstroAnanda Logo" style="height:60px;">
+    </div>
+    
+    <!-- Tagline -->
+    <p class="mb-3" style="font-size: 14px; color: #979797;">Anandian Astronomical Association</p>
+
+    <!-- Navigation Links -->
+    <ul class="list-inline mb-3">
+      <li class="list-inline-item"><a href="#" class="nav-link">Home</a></li>
+      <li class="list-inline-item"><a href="#about" class="nav-link">About</a></li>
+      <li class="list-inline-item"><a href="#board" class="nav-link">Board Of Officials</a></li>
+      <li class="list-inline-item"><a href="#achievements" class="nav-link">Achievements</a></li>
+      <li class="list-inline-item"><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+
+    <!-- Social Icons -->
+    <div class="mb-4 footer-icons" style="font-size: 25px;">
+      <a href="https://www.facebook.com/astroananda/" target="_blank" class="text-white-50 mx-2 footer-fb"><i class="fab fa-facebook-f"></i></a>
+      <a href="mailto:astroananda@gmail.com" target="_blank" class="text-white-50 mx-2 footer-mail"><i class="fas fa-envelope"></i></a>
+      <a href="https://www.instagram.com/astro_ananda/" target="_blank" class="text-white-50 mx-2 footer-insta"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/user/astroananda" target="_blank" class="text-white-50 mx-2 footer-yt"><i class="fab fa-youtube"></i></a>
+    </div>
+
+    <!-- Copyright -->
+    <p class="mb-0" style="font-size: 12px; color: #777;">
+      &copy; 2026 AstroAnanda | All rights reserved.<br>
+      A project by AAA 2024/25 Board of Officials<br>
+      Website designed and developed by <a href="https://github.com/pulithaSethninduu" target="_blank">Pulitha Sethnindu </a>
+    </p>
   </div>
 </footer>
+<!-- Footer End -->
+
 
 <!-- ================= SCRIPTS ================= -->
 <script src="js/jquery-3.4.1.min.js"></script>
