@@ -144,12 +144,38 @@
   color:#ff0000;
 }
 
+.wa i{
+  font-size: 3rem;
+  color:#25D366;
+}
+
 .insta i {
   font-size: 3rem;
   background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block; /* ensures gradient applies properly */
+}
+
+.wa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #050505; /* WhatsApp green */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.wa-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.wa-btn i {
+  font-size: 1.2em;
 }
 
 /* Desktop hover */
@@ -243,7 +269,6 @@
   
   <div class="hero-img"></div>
 
-  <!-- Star background canvas (we’ll animate later) -->
   <div id="starfield"></div>
 
   <div class="container hero-content text-center">
@@ -266,7 +291,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-7 mb-5">
         <div class="contact-form">
-          <h2 class="mb-4 text-center">Get in Touch</h2>
+          <h2 class="mb-4 text-center">Contact Us</h2>
 
           <p class="text-center">
             <strong>Select your preferred contact method:</strong>
@@ -315,6 +340,53 @@
     </div>
 
     <!-- Social Flip Cards -->
+<div class="row justify-content-center mt-4">
+  <div class="col-md-3 mb-3">
+    <div class="flip-card">
+      <div class="flip-inner">
+        <!-- Front of the card -->
+        <div class="flip-front wa text-center p-3">
+          <i class="fab fa-whatsapp fa-2x"></i>
+          <span class="d-block mt-2">WhatsApp 1</span>
+        </div>
+
+        <!-- Back of the card -->
+        <div class="flip-back wa text-center p-3">
+          <!-- First person -->
+          <div class="small mb font-weight-bold">Sithum Pahasara</div>
+          <div class="small text-muted mb-2">President</div>
+          <a href="https://wa.me/94710545470" target="_blank" class="wa-btn">
+            <i class="fab fa-whatsapp"></i> +94 71 054 5470
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="flip-card">
+      <div class="flip-inner">
+        <!-- Front of the card -->
+        <div class="flip-front wa text-center p-3">
+          <i class="fab fa-whatsapp fa-2x"></i>
+          <span class="d-block mt-2">WhatsApp 2</span>
+        </div>
+
+        <!-- Back of the card -->
+        <div class="flip-back wa text-center p-3">
+          <!-- First person -->
+          <div class="small mb font-weight-bold">Pulitha Sethnindu</div>
+          <div class="small text-muted mb-2">Secretary</div>
+          <a href="https://wa.me/94710545470" target="_blank" class="wa-btn">
+            <i class="fab fa-whatsapp"></i> +94 71 054 5470
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br>
+<div class="section-title text-center">Follow us on</div>
+
     <div class="row justify-content-center mt-4">
 
       <!-- Facebook -->
