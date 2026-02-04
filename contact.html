@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>AstroAnanda</title>
+
+  <!-- Mobile first -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS (Dreamweaver local file) -->
+  <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Font Awesome 5 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+/* ================= CONTACT FORM ================= */
+
+.contact-form {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.contact-methods {
+  margin-bottom: 20px;
+}
+
+.contact-method-btn {
+  width: 48%;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: .2s;
+}
+
+.contact-method-btn:last-child {
+  margin-right: 0;
+}
+
+.contact-method-btn.selected {
+  box-shadow: 0 0 10px rgba(0,0,0,.3);
+  transform: scale(1.05);
+}
+
+.btn-whatsapp { background:#25D366; }
+.btn-email { background:#D44638; }
+
+
+
+/* ================= FLIP CARDS ================= */
+
+.flip-card {
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.flip-card:active {
+  transform: scale(.97);
+}
+
+.flip-inner {
+  position: relative;
+  height: 140px;
+  transition: transform .7s;
+  transform-style: preserve-3d;
+}
+
+.flip-front,
+.flip-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.flip-front {
+  background: #111;
+  color: white;
+}
+
+.flip-back {
+  background: #111;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.flip-back a {
+  color: white;
+  text-decoration: none;
+}
+
+
+
+/* Desktop hover */
+@media (hover:hover) {
+  .flip-card:hover .flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .tap-hint {
+    display: none;
+  }
+}
+
+/* Mobile tap */
+.flip-card.flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+
+
+
+/* ================= TAP HINT ================= */
+
+.tap-hint {
+  font-size: 12px;
+  opacity: .8;
+  margin-top: 5px;
+}
+
+
+
+/* ================= MOBILE EFFECTS ================= */
+
+@media (hover:none) {
+  .flip-front {
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+
+
+/* ================= RESPONSIVE FIXES ================= */
+
+@media (max-width:768px) {
+
+  .contact-section {
+    padding: 0 25px;
+  }
+
+  .contact-form {
+    padding: 20px;
+  }
+
+  .flip-inner {
+    height: 110px;
+  }
+
+  .contact-methods {
+    flex-direction: column;
+  }
+
+  .contact-method-btn {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width:576px) {
+
+  .flip-front,
+  .flip-back {
+    font-size: 16px;
+  }
+
+  .tap-hint {
+    font-size: 10px;
+  }
+
+  .contact-form h2 {
+    font-size: 22px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+    <!-- ================= HERO SECTION ================= -->
+<header class="hero position-relative">
+  
+  <div class="hero-img"></div>
+
+  <!-- Star background canvas (we’ll animate later) -->
+  <div id="starfield"></div>
+
+  <div class="container hero-content text-center">
+    <h1 class="hero-title">Contact</h1>
+    <p class="hero-subtitle">
+      Anandian Astronomical Association
+    </p>
+
+    <div class="hero-buttons mt-4">
+      <a href="#about" class="btn btn-outline-light btn-lg mr-2">Explore</a>
+      <a href="contact.html" class="btn btn-primary btn-lg">Contact Us</a>
+    </div>
+  </div>
+
+</header>
+
+<section class="section contact-section">
+  <div class="container section-padding">
+
+    <!-- Centered Contact Form -->
+    <div class="row justify-content-center">
+      <div class="col-lg-7 mb-5">
+
+        <div class="contact-form">
+          <h2 class="mb-4 text-center">Get in Touch</h2>
+
+          <p class="text-center">
+            <strong>Select your preferred contact method:</strong>
+          </p>
+
+          <div class="contact-methods d-flex justify-content-between mb-3">
+            <button type="button" class="contact-method-btn btn-whatsapp" data-method="whatsapp">
+              WhatsApp
+            </button>
+            <button type="button" class="contact-method-btn btn-email" data-method="gmail">
+              Email
+            </button>
+          </div>
+
+          <form id="contactForm">
+
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" class="form-control" id="name" required>
+            </div>
+
+            <div class="form-group">
+              <label>Your Email</label>
+              <input type="email" class="form-control" id="email" required>
+            </div>
+
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" class="form-control" id="subject" required>
+            </div>
+
+            <div class="form-group">
+              <label>Message</label>
+              <textarea class="form-control" id="message" rows="5" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Submit
+            </button>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Social Flip Cards -->
+    <div class="row justify-content-center mt-4">
+
+      <!-- Facebook -->
+      <div class="col-md-3 mb-3">
+        <div class="flip-card">
+          <div class="flip-inner">
+
+            <div class="flip-front fb">
+              <i class="fab fa-facebook-f"></i>
+              <span>Facebook</span>
+            </div>
+
+            <div class="flip-back fb">
+              <a href="https://www.facebook.com/astroananda/" target="_blank">
+                <i class="fab fa-facebook-f"></i><br>
+                Visit Facebook
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Instagram -->
+      <div class="col-md-3 mb-3">
+        <div class="flip-card">
+          <div class="flip-inner">
+
+            <div class="flip-front insta">
+              <i class="fab fa-instagram"></i>
+              <span>Instagram</span>
+            </div>
+
+            <div class="flip-back insta">
+              <a href="https://www.instagram.com/astro_ananda/" target="_blank">
+                <i class="fab fa-instagram"></i><br>
+                Visit Instagram
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- YouTube -->
+      <div class="col-md-3 mb-3">
+        <div class="flip-card">
+          <div class="flip-inner">
+
+            <div class="flip-front yt">
+              <i class="fab fa-youtube"></i>
+              <span>YouTube</span>
+            </div>
+
+            <div class="flip-back yt">
+              <a href="https://www.youtube.com/user/astroananda" target="_blank">
+                <i class="fab fa-youtube"></i><br>
+                Visit YouTube
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="container pt-4 pb-4 text-center">
+  <div class="container">
+    <!-- Logo -->
+    <div class="mb-2">
+      <img src="assets/aaa logo.png" alt="AstroAnanda Logo" style="height:60px;">
+    </div>
+    
+    <!-- Tagline -->
+    <p class="mb-3" style="font-size: 14px; color: #979797;">Anandian Astronomical Association</p>
+
+    <!-- Navigation Links -->
+    <ul class="list-inline mb-3">
+      <li class="list-inline-item"><a href="#" class="nav-link">Home</a></li>
+      <li class="list-inline-item"><a href="#about" class="nav-link">About</a></li>
+      <li class="list-inline-item"><a href="#board" class="nav-link">Board Of Officials</a></li>
+      <li class="list-inline-item"><a href="#achievements" class="nav-link">Achievements</a></li>
+      <li class="list-inline-item"><a href="#register" class="nav-link">Register</a></li>
+    </ul>
+
+    <!-- Social Icons -->
+    <div class="mb-4" style="font-size: 25px;">
+      <a href="https://www.facebook.com/astroananda/" target="_blank" class="text-white-50 mx-2"><i class="fab fa-facebook-f"></i></a>
+      <a href="mailto:astroananda@gmail.com" target="_blank" class="text-white-50 mx-2"><i class="fas fa-envelope"></i></a>
+      <a href="https://www.instagram.com/astro_ananda/" target="_blank" class="text-white-50 mx-2"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/user/astroananda" target="_blank" class="text-white-50 mx-2"><i class="fab fa-youtube"></i></a>
+    </div>
+
+    <!-- Copyright -->
+    <p class="mb-0" style="font-size: 12px; color: #777;">
+      &copy; 2026 AstroAnanda | All rights reserved.<br>
+      A project by AAA 2024/25 Board of Officials<br>
+      Website designed and developed by <a href="https://github.com/pulithaSethninduu" target="_blank">Pulitha Sethnindu </a>
+    </p>
+  </div>
+</footer>
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap-4.4.1.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+let selectedMethod = null;
+
+// Handle WhatsApp / Email button selection
+document.querySelectorAll('.contact-method-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.contact-method-btn').forEach(b => b.classList.remove('selected'));
+    this.classList.add('selected');
+    selectedMethod = this.dataset.method;
+  });
+});
+
+document.getElementById('contactForm').addEventListener('submit', function(e){
+  e.preventDefault();
+
+  if(!selectedMethod){
+    alert("Please select WhatsApp or Email before submitting.");
+    return;
+  }
+
+  const name = encodeURIComponent(document.getElementById('name').value);
+  const email = encodeURIComponent(document.getElementById('email').value);
+  const subject = encodeURIComponent(document.getElementById('subject').value);
+  const message = encodeURIComponent(document.getElementById('message').value);
+
+  if(selectedMethod === "whatsapp") {
+    const whatsappNumber = "94712345678"; // replace with your number
+    const whatsappMessage = `New%20Contact%20Form%20Submission%0AName:%20${name}%0AEmail:%20${email}%0ASubject:%20${subject}%0AMessage:%20${message}`;
+    window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank");
+  }
+  else if(selectedMethod === "gmail") {
+    const mailto = `mailto:contact@astroananda.com?subject=${subject}&body=Name:%20${name}%0AEmail:%20${email}%0AMessage:%20${message}`;
+    window.location.href = mailto;
+  }
+
+  // Reset form & selection
+  this.reset();
+  selectedMethod = null;
+  document.querySelectorAll('.contact-method-btn').forEach(b => b.classList.remove('selected'));
+});
+
+document.querySelectorAll('.flip-card').forEach(card => {
+  card.addEventListener('click', function () {
+    this.classList.toggle('flipped');
+  });
+});
+</script>
+
+</body>
+</html>

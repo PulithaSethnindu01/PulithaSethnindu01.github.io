@@ -196,6 +196,10 @@ small, .text-muted{
 
 
 /* Sections */
+.section {
+  background: var(--bg-section);
+}
+
 .section-padding {
   padding: 20px 0;
 	background: var(--bg-section);
@@ -427,3 +431,10 @@ small, .text-muted{
   background: rgba(255,255,255,0.7); /* optional: slightly opaque overlay */
   z-index: 10;
 }
+
+.contact-section {
+      min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    }
