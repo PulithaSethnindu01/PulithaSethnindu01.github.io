@@ -18,13 +18,40 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
+
+.contact-section {
+      min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    }
 /* ================= CONTACT FORM ================= */
 
 .contact-form {
-  background: white;
+  background: #111;
+  color: white;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Normal state */
+.contact-form input,
+.contact-form textarea {
+  background-color: #313131; /* your desired input background */
+  border: 1px solid transparent; /* removes the gray stroke */
+  border-radius: 5px;
+  transition: all 0.3s;
+  color: #ffffff;
+}
+
+/* Focused state */
+.contact-form input:focus,
+.contact-form textarea:focus {
+  background-color: #e0f7fa; /* keeps background same */
+  border: 1px solid #6c63ff; /* subtle border matching theme */
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.4); /* optional glow */
+  outline: none; /* remove browser outline */
 }
 
 .contact-methods {
@@ -48,7 +75,7 @@
 }
 
 .contact-method-btn.selected {
-  box-shadow: 0 0 10px rgba(0,0,0,.3);
+  box-shadow: 0 0 10px rgb(218, 211, 255);
   transform: scale(1.05);
 }
 
@@ -122,17 +149,6 @@
 .flip-card.flipped .flip-inner {
   transform: rotateY(180deg);
 }
-
-
-
-/* ================= TAP HINT ================= */
-
-.tap-hint {
-  font-size: 12px;
-  opacity: .8;
-  margin-top: 5px;
-}
-
 
 
 /* ================= MOBILE EFFECTS ================= */
@@ -232,7 +248,6 @@
     <!-- Centered Contact Form -->
     <div class="row justify-content-center">
       <div class="col-lg-7 mb-5">
-
         <div class="contact-form">
           <h2 class="mb-4 text-center">Get in Touch</h2>
 
@@ -241,46 +256,42 @@
           </p>
 
           <div class="contact-methods d-flex justify-content-between mb-3">
-            <button type="button" class="contact-method-btn btn-whatsapp" data-method="whatsapp">
-              WhatsApp
-            </button>
             <button type="button" class="contact-method-btn btn-email" data-method="gmail">
               Email
             </button>
+            <button type="button" class="contact-method-btn btn-whatsapp" data-method="whatsapp">
+              WhatsApp
+            </button>
           </div>
 
-          <form id="contactForm">
-
+          <form id="contactForm" method="POST" action="assets/send_email.php">
             <div class="form-group">
               <label>Your Name</label>
-              <input type="text" class="form-control" id="name" required>
+              <input type="text" class="form-control" name="name" required>
             </div>
 
             <div class="form-group">
               <label>Your Email</label>
-              <input type="email" class="form-control" id="email" required>
+              <input type="email" class="form-control" name="email" required>
             </div>
 
             <div class="form-group">
               <label>Subject</label>
-              <input type="text" class="form-control" id="subject" required>
+              <input type="text" class="form-control" name="subject" required>
             </div>
 
             <div class="form-group">
               <label>Message</label>
-              <textarea class="form-control" id="message" rows="5" required></textarea>
+              <textarea class="form-control" name="message" rows="5" required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">
-              Submit
-            </button>
-
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
           </form>
-        </div>
 
+          <div id="formMessage" style="margin-top:10px;color:green;"></div>
+        </div>
       </div>
     </div>
-
 
     <!-- Social Flip Cards -->
     <div class="row justify-content-center mt-4">
@@ -289,19 +300,16 @@
       <div class="col-md-3 mb-3">
         <div class="flip-card">
           <div class="flip-inner">
-
             <div class="flip-front fb">
               <i class="fab fa-facebook-f"></i>
               <span>Facebook</span>
             </div>
-
             <div class="flip-back fb">
               <a href="https://www.facebook.com/astroananda/" target="_blank">
                 <i class="fab fa-facebook-f"></i><br>
                 Visit Facebook
               </a>
             </div>
-
           </div>
         </div>
       </div>
@@ -310,19 +318,16 @@
       <div class="col-md-3 mb-3">
         <div class="flip-card">
           <div class="flip-inner">
-
             <div class="flip-front insta">
               <i class="fab fa-instagram"></i>
               <span>Instagram</span>
             </div>
-
             <div class="flip-back insta">
               <a href="https://www.instagram.com/astro_ananda/" target="_blank">
                 <i class="fab fa-instagram"></i><br>
                 Visit Instagram
               </a>
             </div>
-
           </div>
         </div>
       </div>
@@ -331,27 +336,24 @@
       <div class="col-md-3 mb-3">
         <div class="flip-card">
           <div class="flip-inner">
-
             <div class="flip-front yt">
               <i class="fab fa-youtube"></i>
               <span>YouTube</span>
             </div>
-
             <div class="flip-back yt">
               <a href="https://www.youtube.com/user/astroananda" target="_blank">
                 <i class="fab fa-youtube"></i><br>
                 Visit YouTube
               </a>
             </div>
-
           </div>
         </div>
       </div>
 
     </div>
-
   </div>
 </section>
+
 
 
 <!-- ================= FOOTER ================= -->
@@ -399,49 +401,95 @@
 <script>
 let selectedMethod = null;
 
-// Handle WhatsApp / Email button selection
-document.querySelectorAll('.contact-method-btn').forEach(btn => {
-  btn.addEventListener('click', function(){
-    document.querySelectorAll('.contact-method-btn').forEach(b => b.classList.remove('selected'));
-    this.classList.add('selected');
-    selectedMethod = this.dataset.method;
+// Contact method buttons
+const contactButtons = document.querySelectorAll('.contact-method-btn');
+contactButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    contactButtons.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMethod = btn.dataset.method;
   });
 });
 
-document.getElementById('contactForm').addEventListener('submit', function(e){
+// Check if mobile
+const isMobile = () => /Mobi|Android/i.test(navigator.userAgent);
+
+// Validate form
+const validateForm = (name, email, subject, message) => {
+  if (!name || !email || !subject || !message) {
+    alert("Please fill in all fields.");
+    return false;
+  }
+  const emailPattern = /\S+@\S+\.\S+/;
+  if (!emailPattern.test(email)) {
+    alert("Please enter a valid email address.");
+    return false;
+  }
+  return true;
+};
+
+// Send WhatsApp message
+const sendWhatsApp = (data) => {
+  const { name, email, subject, message } = data;
+  const whatsappNumber = "94765785065"; // your number
+  const whatsappMessage = `New%20Contact%20Form%20Submission%0AName:%20${name}%0AEmail:%20${email}%0ASubject:%20${subject}%0AMessage:%20${message}`;
+  const url = isMobile()
+    ? `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
+    : `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
+  window.open(url, "_blank");
+};
+
+// Form submission
+const contactForm = document.getElementById('contactForm');
+const msgDiv = document.getElementById('formMessage');
+
+contactForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if(!selectedMethod){
-    alert("Please select WhatsApp or Email before submitting.");
-    return;
-  }
+  const rawName = contactForm.name.value.trim();
+  const rawEmail = contactForm.email.value.trim();
+  const rawSubject = contactForm.subject.value.trim();
+  const rawMessage = contactForm.message.value.trim();
 
-  const name = encodeURIComponent(document.getElementById('name').value);
-  const email = encodeURIComponent(document.getElementById('email').value);
-  const subject = encodeURIComponent(document.getElementById('subject').value);
-  const message = encodeURIComponent(document.getElementById('message').value);
+  if (!validateForm(rawName, rawEmail, rawSubject, rawMessage)) return;
 
-  if(selectedMethod === "whatsapp") {
-    const whatsappNumber = "94712345678"; // replace with your number
-    const whatsappMessage = `New%20Contact%20Form%20Submission%0AName:%20${name}%0AEmail:%20${email}%0ASubject:%20${subject}%0AMessage:%20${message}`;
-    window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank");
-  }
-  else if(selectedMethod === "gmail") {
-    const mailto = `mailto:contact@astroananda.com?subject=${subject}&body=Name:%20${name}%0AEmail:%20${email}%0AMessage:%20${message}`;
-    window.location.href = mailto;
-  }
+  const data = {
+    name: rawName,
+    email: rawEmail,
+    subject: rawSubject,
+    message: rawMessage
+  };
 
-  // Reset form & selection
-  this.reset();
-  selectedMethod = null;
-  document.querySelectorAll('.contact-method-btn').forEach(b => b.classList.remove('selected'));
+  if (selectedMethod === "whatsapp") {
+    // WhatsApp submission
+    sendWhatsApp(data);
+    contactForm.reset();
+    selectedMethod = null;
+    contactButtons.forEach(b => b.classList.remove('selected'));
+    msgDiv.textContent = "Message sent via WhatsApp!";
+  } else {
+    // Email submission via PHP backend
+    const formData = new FormData(contactForm);
+    fetch('send_email.php', { method: 'POST', body: formData })
+      .then(res => res.text())
+      .then(text => {
+        msgDiv.textContent = text;
+        contactForm.reset();
+        selectedMethod = null;
+        contactButtons.forEach(b => b.classList.remove('selected'));
+      })
+      .catch(err => {
+        msgDiv.textContent = "An error occurred. Please try again.";
+        console.error(err);
+      });
+  }
 });
 
+// Flip cards
 document.querySelectorAll('.flip-card').forEach(card => {
-  card.addEventListener('click', function () {
-    this.classList.toggle('flipped');
-  });
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
 });
+
 </script>
 
 </body>
