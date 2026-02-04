@@ -8,6 +8,8 @@
   <!-- Mobile first -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+  <link rel="icon" href="assets/favicon_AAA.png" type="image/png">
+
   <!-- Bootstrap CSS (Dreamweaver local file) -->
   <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
 
@@ -235,8 +237,7 @@
     </p>
 
     <div class="hero-buttons mt-4">
-      <a href="#about" class="btn btn-outline-light btn-lg mr-2">Explore</a>
-      <a href="contact.html" class="btn btn-primary btn-lg">Contact Us</a>
+      <a href="index.html" class="btn btn-outline-light btn-lg mr-2"><i class="fas fa-arrow-left"></i> Return Home</a>
     </div>
   </div>
 
@@ -291,6 +292,10 @@
           <div id="formMessage" style="margin-top:10px;color:green;"></div>
         </div>
       </div>
+    </div>
+
+    <div class="text-center">
+    <a href="index.html" class="mb-3" style="font-size: 14px; color: #979797; text-decoration: none;" onmouseover="this.style.textDecoration='none'" onmouseout="this.style.textDecoration='none'"><i class="fas fa-arrow-left"></i> Return Home</a>
     </div>
 
     <!-- Social Flip Cards -->
@@ -369,11 +374,11 @@
 
     <!-- Navigation Links -->
     <ul class="list-inline mb-3">
-      <li class="list-inline-item"><a href="#" class="nav-link">Home</a></li>
-      <li class="list-inline-item"><a href="#about" class="nav-link">About</a></li>
-      <li class="list-inline-item"><a href="#board" class="nav-link">Board Of Officials</a></li>
-      <li class="list-inline-item"><a href="#achievements" class="nav-link">Achievements</a></li>
-      <li class="list-inline-item"><a href="#register" class="nav-link">Register</a></li>
+      <li class="list-inline-item"><a href="index.html#" class="nav-link">Home</a></li>
+      <li class="list-inline-item"><a href="index.html#about" class="nav-link">About</a></li>
+      <li class="list-inline-item"><a href="index.html#board" class="nav-link">Board Of Officials</a></li>
+      <li class="list-inline-item"><a href="index.html#achievements" class="nav-link">Achievements</a></li>
+      <li class="list-inline-item"><a href="index.html#register" class="nav-link">Register</a></li>
     </ul>
 
     <!-- Social Icons -->
@@ -432,7 +437,7 @@ const validateForm = (name, email, subject, message) => {
 const sendWhatsApp = (data) => {
   const { name, email, subject, message } = data;
   const whatsappNumber = "94765785065"; // your number
-  const whatsappMessage = `New%20Contact%20Form%20Submission%0AName:%20${name}%0AEmail:%20${email}%0ASubject:%20${subject}%0AMessage:%20${message}`;
+  const whatsappMessage = `Contact%20Form%0AName:%20${name}%0AEmail:%20${email}%0ASubject:%20${subject}%0AMessage:%20${message}`;
   const url = isMobile()
     ? `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
     : `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
