@@ -410,6 +410,172 @@ body.loaded #loader {
   color: white;
 }
 
+/* ===== TERMINAL PROJECTS ===== */
+
+.projects-terminal {
+  min-height: 100vh;       /* full viewport height */
+  width: 100%;             /* full width */
+  padding: 70px 20px;      /* keep padding */
+  display: flex;           /* flex to center content */
+  flex-direction: column;  /* stack children vertically */
+  justify-content: center; /* vertical centering */
+  align-items: center;     /* horizontal centering */
+  box-sizing: border-box;  /* include padding in size */
+}
+
+.terminal{
+  width:100%;
+  max-width:850px;
+  background:#020617;
+  border-radius:12px;
+  box-shadow:0 0 40px rgba(110,252,255,.15);
+  border:1px solid rgba(110,252,255,.2);
+  overflow:hidden;
+  color:#6efcff;
+  font-family:monospace;
+}
+
+/* Header */
+.terminal-header{
+  background:#020617;
+  padding:10px 15px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border-bottom:1px solid rgba(110,252,255,.15);
+}
+
+.terminal-header span{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#6efcff;
+  opacity:.6;
+}
+
+.terminal-header strong{
+  margin-left:10px;
+  font-weight:400;
+  font-size:.8rem;
+}
+
+/* Body */
+.terminal-body{
+  padding:20px;
+  font-size:.85rem;
+}
+
+/* Command */
+.cmd{
+  margin-bottom:15px;
+  opacity:.7;
+}
+
+/* Project */
+.project{
+  margin-bottom:10px;
+}
+
+.folder{
+  cursor:pointer;
+  transition:.2s;
+}
+
+.folder:hover{
+  padding-left:8px;
+}
+
+/* Hidden details */
+.details {
+  max-height: 0;
+  overflow: hidden; /* keeps it hidden initially */
+  margin-left: 18px;
+  margin-top: 5px;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+  display: block; /* make sure image inside is always rendered */
+}
+.details.open {
+  max-height: 600px; /* increase to fit bigger logo */
+  opacity: 1;
+}
+
+/* Link */
+.details a{
+  color:#ffd700;
+  text-decoration:none;
+}
+
+.details a:hover{
+  text-decoration:underline;
+}
+
+/* Mobile */
+@media(max-width:600px){
+  .terminal-body{
+    padding:15px;
+    font-size:.8rem;
+  }
+}
+
+/* Project expanded layout */
+.project-row {
+  display: flex;
+  gap: 25px;            /* give space between logo and info */
+  margin-top: 10px;
+  align-items: flex-start;
+}
+
+/* Bigger logo for readability */
+.project-logo {
+  width: 300px;         /* large enough to read text */
+  height: auto;         /* keep aspect ratio */
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px #6efcff);
+  flex-shrink: 0;       /* don’t shrink */
+  transition: transform 0.3s ease;
+}
+
+/* Optional hover effect */
+.project-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Project info */
+.project-info {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  flex: 1;               /* take remaining space */
+}
+
+.project-info strong {
+  color: #ffd700;
+  font-size: 1rem;
+}
+
+.project-info span {
+  color: #6efcff;
+}
+
+/* Mobile */
+@media(max-width:700px) {
+  .project-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .project-logo {
+    width: 200px;        /* still readable on mobile */
+    height: auto;
+  }
+
+  .project-info {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+}
+
 
 /* ===== STATS ===== */
 .stats-section {

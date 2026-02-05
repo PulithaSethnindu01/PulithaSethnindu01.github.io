@@ -119,3 +119,19 @@ if (registerForm) {
     this.reset();
   });
 }
+
+const folders = document.querySelectorAll(".folder");
+
+folders.forEach(folder => {
+  folder.addEventListener("click", () => {
+    const details = folder.nextElementSibling;
+
+    // Close all other details
+    document.querySelectorAll(".details").forEach(d => {
+      if (d !== details) d.classList.remove("open");
+    });
+
+    // Toggle current
+    details.classList.toggle("open");
+  });
+});
