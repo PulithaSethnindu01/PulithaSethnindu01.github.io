@@ -1,108 +1,170 @@
-  // ===== CONFIG =====
-  const ADMIN_USER = "admin"; 
-  const ADMIN_PASS = "1234";  
-  const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dpwzcrxlr/image/upload"; 
-  const UPLOAD_PRESET = "Pr4Yn8gbsxPbzO7Uy25Xjb7kZjE"; 
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyn7b1U_W_BdnbkxvXSOychIrxbrZidnUi_XXs6KEn27GqO_c7IjcktmsIJf-MDy3BD/exec"; 
+const ADMIN_USER = "pzzz";
+const ADMIN_PASS = "111";
+const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dpwzcrxlr/image/upload";
+const UPLOAD_PRESET = "Pr4Yn8gbsxPbzO7Uy25Xjb7kZjE";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxDvIXhBFEMzj2WVX0pCIbk2wzMWr0RIbopJggl7iWD6g4itpUKIsw6XVq-xAIWjtZo/exec"; // Replace with your web app URL
 
-  // ===== LOGIN =====
-  function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-    if(user === ADMIN_USER && pass === ADMIN_PASS){
-      alert("Login Successful!");
-      document.getElementById("login-section").style.display="none";
-      document.getElementById("form-section").style.display="block";
+// Login
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    alert("Login Successful!");
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("form-section").style.display = "block";
+    loadAchievements();
+  } else {
+    alert("Invalid username or password!");
+  }
+}
+
+// Image compression
+function compressImage(file, maxWidth = 800, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = e => img.src = e.target.result;
+    reader.onerror = err => reject(err);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const scale = Math.min(maxWidth / img.width, 1);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => resolve(blob), "image/jpeg", quality);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Add new achievement
+async function addAchievement() {
+  const title = document.getElementById("title").value;
+  const date = document.getElementById("date").value;
+  const desc = document.getElementById("desc").value;
+  const fileInput = document.getElementById("image");
+  const file = fileInput.files[0];
+
+  if (!title || !date || !desc || !file) {
+    alert("Fill all fields!");
+    return;
+  }
+  if (!file.type.startsWith("image/")) {
+    alert("Please select a valid image file!");
+    return;
+  }
+
+  document.getElementById("progress").style.display = "block";
+
+  try {
+    const compressedBlob = await compressImage(file);
+
+    // Upload to Cloudinary
+    const cloudForm = new FormData();
+    cloudForm.append("file", compressedBlob);
+    cloudForm.append("upload_preset", UPLOAD_PRESET);
+    const cloudRes = await fetch(CLOUDINARY_URL, { method: "POST", body: cloudForm });
+    const cloudData = await cloudRes.json();
+    const imageUrl = cloudData.secure_url;
+
+    // Send to backend
+    const sheetForm = new FormData();
+    sheetForm.append("title", title);
+    sheetForm.append("date", date);
+    sheetForm.append("description", desc);
+    sheetForm.append("image", imageUrl);
+
+    const sheetRes = await fetch(WEB_APP_URL, { method: "POST", body: sheetForm });
+    const sheetJson = await sheetRes.json();
+
+    if (sheetJson.status === "success") {
+      alert("Achievement added successfully!");
+      fileInput.value = "";
+      document.getElementById("title").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("desc").value = "";
+      loadAchievements();
     } else {
-      alert("Invalid username or password!");
+      alert("Error: " + sheetJson.message);
     }
+
+  } catch (err) {
+    alert("Error: " + err.message);
+    console.error(err);
+  } finally {
+    document.getElementById("progress").style.display = "none";
   }
+}
 
-  // ===== IMAGE COMPRESSION =====
-  function compressImage(file, maxWidth = 800, quality = 0.7) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      const reader = new FileReader();
-      reader.onload = e => img.src = e.target.result;
-      reader.onerror = err => reject(err);
+// Load all achievements
+// Load all achievements (updated with Delete button)
+async function loadAchievements() {
+  const res = await fetch(WEB_APP_URL);
+  const achievements = await res.json();
+  const container = document.getElementById("achievements-container");
+  container.innerHTML = "";
 
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const scale = Math.min(maxWidth / img.width, 1);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(blob => resolve(blob), "image/jpeg", quality);
-      };
-      reader.readAsDataURL(file);
-    });
-  }
+  achievements.forEach(ach => {
+    const dateVal = ach.date ? new Date(ach.date).toISOString().split("T")[0] : "";
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <img src="${ach.image}" style="width:80px;height:60px;object-fit:cover;">
+      <input type="text" id="title-${ach.id}" value="${ach.title}">
+      <input type="date" id="date-${ach.id}" value="${dateVal}">
+      <textarea id="desc-${ach.id}">${ach.description}</textarea>
+      <button onclick="updateAchievement('${ach.id}','${ach.image}')">Update</button>
+      <button onclick="deleteAchievement('${ach.id}')">Delete</button>
+    `;
+    container.appendChild(div);
+  });
+}
 
-  // ===== ADD ACHIEVEMENT =====
-  async function addAchievement() {
-    const title = document.getElementById("title").value;
-    const date = document.getElementById("date").value;
-    const desc = document.getElementById("desc").value;
-    const fileInput = document.getElementById("image");
-    const file = fileInput.files[0];
+// Delete achievement
+async function deleteAchievement(id) {
+  if (!confirm("Are you sure you want to delete this achievement?")) return;
 
-    if(!title || !date || !desc || !file){
-      alert("Fill all fields!");
-      return;
+  try {
+    // Send POST instead of DELETE
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("action", "delete"); // signal delete
+
+    const res = await fetch(WEB_APP_URL, { method: "POST", body: formData });
+    const json = await res.json();
+
+    if (json.status === "success") {
+      alert("Achievement deleted!");
+      loadAchievements(); // refresh list
+    } else {
+      alert("Error: " + json.message);
     }
-    if(!file.type.startsWith("image/")){
-  alert("Please select a valid image file!");
-  return;
+  } catch (err) {
+    alert("Error: " + err.message);
+    console.error(err);
+  }
 }
 
 
-    document.getElementById("progress").style.display = "block";
+// Update achievement
+async function updateAchievement(id, imageUrl) {
+  const title = document.getElementById(`title-${id}`).value;
+  const date = document.getElementById(`date-${id}`).value;
+  const desc = document.getElementById(`desc-${id}`).value;
 
-    try {
-      // Compress image before upload
-      const compressedBlob = await compressImage(file);
+  const formData = new FormData();
+  formData.append("id", id); // critical!
+  formData.append("title", title);
+  formData.append("date", date);
+  formData.append("description", desc);
+  formData.append("image", imageUrl);
 
-      // Upload to Cloudinary
-      const formData = new FormData();
-      formData.append("file", compressedBlob);
-      formData.append("upload_preset", UPLOAD_PRESET);
+  const res = await fetch(WEB_APP_URL, { method: "POST", body: formData });
+  const json = await res.json();
 
-      const cloudRes = await fetch(CLOUDINARY_URL, { method:"POST", body:formData });
-      const cloudData = await cloudRes.json();
-
-      if(!cloudData.secure_url){
-        alert("Cloudinary upload failed!");
-        document.getElementById("progress").style.display = "none";
-        return;
-      }
-
-      const imageUrl = cloudData.secure_url;
-
-      // Send to Google Sheet via Web App
-      const sheetData = new FormData();
-      sheetData.append("title", title);
-      sheetData.append("date", date);
-      sheetData.append("description", desc);
-      sheetData.append("image", imageUrl);
-
-      const sheetRes = await fetch(WEB_APP_URL, { method:"POST", body: sheetData });
-      const sheetJson = await sheetRes.json();
-
-      if(sheetJson.status === "success"){
-        alert("Achievement added successfully!");
-        document.getElementById("title").value = "";
-        document.getElementById("date").value = "";
-        document.getElementById("desc").value = "";
-        fileInput.value = "";
-      } else {
-        alert("Error saving to Sheet: " + sheetJson.message);
-      }
-
-    } catch(err){
-      alert("Error: " + err.message);
-      console.error(err);
-    } finally {
-      document.getElementById("progress").style.display = "none";
-    }
+  if (json.status === "success") {
+    alert("Updated!");
+    loadAchievements();
+  } else {
+    alert("Error: " + json.message);
   }
+}

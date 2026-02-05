@@ -3,31 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Achievements Admin</title>
+<title>AAA | Admin</title>
 <link rel="stylesheet" href="admin-style.css">
 </head>
 <body>
 
-<h2>Achievements Admin</h2>
+<div class="container">
+  <h1>Achievements Admin</h1>
 
-<!-- LOGIN SECTION -->
-<div id="login-section">
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
+  <!-- Login Section -->
+  <div id="login-section" class="card">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
 
-<!-- FORM SECTION -->
-<div id="form-section" style="display:none;">
-  <input id="title" placeholder="Title">
-  <input id="date" type="date">
-  <textarea id="desc" placeholder="Description"></textarea>
-  <input type="file" id="image"><br>
-  <div id="progress">Uploading...</div>
-  <button onclick="addAchievement()">Add Achievement</button>
+  <!-- Form & Existing Achievements -->
+  <div id="form-section" style="display:none;">
+    
+    <!-- Add New Achievement -->
+    <div class="card">
+      <h2>Add New Achievement</h2>
+      <input type="text" id="title" placeholder="Title">
+      <input type="date" id="date">
+      <textarea id="desc" placeholder="Description"></textarea>
+      <input type="file" id="image">
+      <button onclick="addAchievement()">Add Achievement</button>
+      <div id="progress" class="progress" style="display:none;">Uploading...</div>
+    </div>
+
+    <!-- Existing Achievements -->
+    <div class="card">
+      <h2>Existing Achievements</h2>
+      <div id="achievements-container"></div>
+    </div>
+
+  </div>
 </div>
 
 <script src="admin.js"></script>
-
 </body>
 </html>

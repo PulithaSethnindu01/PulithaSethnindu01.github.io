@@ -1,43 +1,94 @@
 body {
-  font-family: sans-serif;
-  max-width: 600px;
-  margin: 50px auto;
-  background: #070b14;
-  color: #e6ebff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
 }
 
-input,
-textarea,
-button {
-  width: 100%;
-  margin-bottom: 10px;
+.container {
+  max-width: 900px;
+  margin: 30px auto;
   padding: 10px;
-  border-radius: 5px;
-  border: none;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+input[type="text"], input[type="date"], textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
 }
 
 button {
+  background-color: #4a90e2;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  background: #6ea8ff;
-  color: #070b14;
-  font-weight: 600;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 button:hover {
-  background: #4d8dff;
-  color: white;
+  background-color: #357ABD;
 }
 
-#login-section,
-#form-section {
-  margin-top: 20px;
-  background: #0e1424;
-  padding: 20px;
-  border-radius: 10px;
+.progress {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
 }
 
-#progress {
-  margin-bottom: 10px;
-  color: #6ea8ff;
-  display: none;
+#achievements-container div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+#achievements-container img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+#achievements-container input[type="text"], 
+#achievements-container input[type="date"], 
+#achievements-container textarea {
+  width: 200px;
+  margin: 0;
+  padding: 6px;
+  font-size: 14px;
+}
+
+#achievements-container textarea {
+  width: 300px;
+  min-height: 50px;
+}
+
+#achievements-container button {
+  padding: 6px 12px;
+  font-size: 14px;
 }
