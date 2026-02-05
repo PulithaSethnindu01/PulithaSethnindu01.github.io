@@ -1,40 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Achievements Admin</title>
-<style>
-  body { font-family: sans-serif; max-width: 600px; margin: 50px auto; background:#070b14; color:#e6ebff; }
-  input, textarea, button { width: 100%; margin-bottom: 10px; padding: 10px; border-radius:5px; border:none; }
-  button { cursor:pointer; background:#6ea8ff; color:#070b14; font-weight:600; }
-  button:hover { background:#4d8dff; color:white; }
-  #login-section, #form-section { margin-top:20px; background:#0e1424; padding:20px; border-radius:10px; }
-  #progress { margin-bottom: 10px; color: #6ea8ff; display: none; }
-</style>
-</head>
-<body>
-
-<h2>Achievements Admin</h2>
-
-<!-- LOGIN SECTION -->
-<div id="login-section">
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
-
-<!-- FORM SECTION -->
-<div id="form-section" style="display:none;">
-  <input id="title" placeholder="Title">
-  <input id="date" type="date">
-  <textarea id="desc" placeholder="Description"></textarea>
-  <input type="file" id="image"><br>
-  <div id="progress">Uploading...</div>
-  <button onclick="addAchievement()">Add Achievement</button>
-</div>
-
-<script>
   // ===== CONFIG =====
   const ADMIN_USER = "admin"; 
   const ADMIN_PASS = "1234";  
@@ -88,6 +51,11 @@
       alert("Fill all fields!");
       return;
     }
+    if(!file.type.startsWith("image/")){
+  alert("Please select a valid image file!");
+  return;
+}
+
 
     document.getElementById("progress").style.display = "block";
 
@@ -138,7 +106,3 @@
       document.getElementById("progress").style.display = "none";
     }
   }
-</script>
-
-</body>
-</html>

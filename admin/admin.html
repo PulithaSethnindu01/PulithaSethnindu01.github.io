@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achievements Admin</title>
+<link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<h2>Achievements Admin</h2>
+
+<!-- LOGIN SECTION -->
+<div id="login-section">
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- FORM SECTION -->
+<div id="form-section" style="display:none;">
+  <input id="title" placeholder="Title">
+  <input id="date" type="date">
+  <textarea id="desc" placeholder="Description"></textarea>
+  <input type="file" id="image"><br>
+  <div id="progress">Uploading...</div>
+  <button onclick="addAchievement()">Add Achievement</button>
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

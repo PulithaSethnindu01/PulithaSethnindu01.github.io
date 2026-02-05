@@ -6,13 +6,7 @@ async function fetchAchievements() {
   try {
     const res = await fetch(WEB_APP_URL);
     const data = await res.json();
-    console.log("Fetched achievements data:", data);
-
-    if (!Array.isArray(data)) {
-      console.error("Data is not an array. Check your sheet headings and values.");
-      return [];
-    }
-
+    if (!Array.isArray(data)) throw new Error("Data is not an array.");
     return data;
   } catch (err) {
     console.error("Failed to fetch achievements:", err);
@@ -27,28 +21,25 @@ async function loadAllAchievements(containerId) {
   container.innerHTML = "";
 
   const achievements = await fetchAchievements();
+  const sorted = achievements.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // Sort by date descending (latest first)
-  const sortedAchievements = achievements.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  sortedAchievements.forEach((ach) => {
+  sorted.forEach(ach => {
     const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image";
     const year = new Date(ach.date).getFullYear();
 
     const col = document.createElement("div");
-    col.className = "col-md-4 mb-4 achievement-col"; // class for filtering
+    col.className = "col-md-4 mb-4 achievement-col";
     col.dataset.year = year;
     col.innerHTML = `
       <div class="achievement-card">
         <img data-src="${imgSrc}" src="https://via.placeholder.com/300x200?text=Loading..." loading="lazy" draggable="false" alt="${ach.title}">
         <h5>${ach.title}</h5>
-        <small>${ach.date}</small>
+        <small>${new Date(ach.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</small>
         <p>${ach.description}</p>
       </div>`;
     container.appendChild(col);
   });
 
-  // Lazy-load images
   const lazyImages = container.querySelectorAll("img[data-src]");
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
@@ -66,8 +57,7 @@ async function loadAllAchievements(containerId) {
 
 // ===== FILTER =====
 function filterAchievementsByYear(year) {
-  const allCards = document.querySelectorAll(".achievement-col");
-  allCards.forEach(card => {
+  document.querySelectorAll(".achievement-col").forEach(card => {
     card.style.display = (year === "all" || card.dataset.year === year) ? "block" : "none";
   });
 }
@@ -78,9 +68,8 @@ async function populateYearPills(containerId) {
   if (!container) return;
 
   const achievements = await fetchAchievements();
-  const years = [...new Set(achievements.map(ach => new Date(ach.date).getFullYear()))].sort((a, b) => b - a);
+  const years = [...new Set(achievements.map(a => new Date(a.date).getFullYear()))].sort((a, b) => b - a);
 
-  // Add "All" pill first
   const allPill = document.createElement("button");
   allPill.className = "year-pill active";
   allPill.textContent = "All";
@@ -95,79 +84,182 @@ async function populateYearPills(containerId) {
     container.appendChild(pill);
   });
 
-  // Click event for filtering
-  container.addEventListener("click", (e) => {
+  container.addEventListener("click", e => {
     const pill = e.target.closest(".year-pill");
     if (!pill) return;
-
     container.querySelectorAll(".year-pill").forEach(p => p.classList.remove("active"));
     pill.classList.add("active");
-
     filterAchievementsByYear(pill.dataset.year);
   });
 }
 
-// ===== SLIDER =====
-async function autoHorizontalSlider(containerId, visible = 3) {
+// ===== RESPONSIVE SLIDER (FINAL FIX) =====
+async function autoHorizontalSlider(containerId) {
   const track = document.getElementById(containerId);
   if (!track) return;
+
   const slider = track.parentElement;
-  track.classList.add("achievements-track");
+  track.className = "achievements-track";
   track.innerHTML = "";
 
   const achievements = await fetchAchievements();
-  if (achievements.length === 0) return;
+  if (!achievements.length) return;
 
-  // Sort by date descending (latest first)
   const sorted = achievements.sort((a, b) => new Date(b.date) - new Date(a.date));
   const latest = sorted.slice(0, 5);
-  const data = [...latest, ...latest.slice(0, visible)];
 
-  data.forEach(ach => {
-    const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image";
-    const slide = document.createElement("div");
-    slide.className = "achievement-slide";
-    slide.innerHTML = `
-      <div class="achievement-card p-3">
-        <img src="${imgSrc}" class="mb-3" draggable="false" alt="${ach.title}">
-        <h6>${ach.title}</h6>
-        <small class="text-muted">${ach.date}</small>
-        <p class="small mt-2">${ach.description}</p>
-      </div>`;
-    track.appendChild(slide);
+  function getVisible() {
+    if (window.innerWidth < 576) return 1;
+    if (window.innerWidth < 992) return 2;
+    return 3;
+  }
+
+  let visible = getVisible();
+  let index = 0;
+
+  const dotsContainer = document.getElementById("achievement-dots");
+if (dotsContainer) dotsContainer.innerHTML = "";
+
+// Create dots
+latest.forEach((_, i) => {
+  const dot = document.createElement("div");
+  dot.className = "achievement-dot" + (i === 0 ? " active" : "");
+  dot.addEventListener("click", () => {
+    index = i;
+    move();
+    updateDots();
   });
+  dotsContainer.appendChild(dot);
+});
 
-  let index = 0, total = latest.length, slideWidth = slider.offsetWidth / visible;
-  let autoSlide = setInterval(() => { index++; move(); }, 3500);
-
-  function move(animate = true) {
-    track.style.transition = animate ? "transform 0.6s ease-in-out" : "none";
-    track.style.transform = `translateX(-${index * slideWidth}px)`;
-    if (index === total) setTimeout(() => { track.style.transition = "none"; track.style.transform = "translateX(0)"; index = 0; }, 600);
-  }
-
-  // Drag / swipe
-  let startX = 0, currentX = 0, isDragging = false;
-  function dragStart(x) { clearInterval(autoSlide); isDragging = true; startX = x; currentX = x; track.style.transition = "none"; }
-  function dragMove(x) { if (!isDragging) return; currentX = x; const diff = currentX - startX; track.style.transform = `translateX(${-(index * slideWidth) + diff}px)`; }
-  function dragEnd() { 
-    if (!isDragging) return; 
-    isDragging = false; 
-    const diff = currentX - startX; 
-    if (Math.abs(diff) > slideWidth / 4) index += diff < 0 ? 1 : -1; 
-    if (index < 0) index = 0; 
-    if (index > total) index = total; 
-    move(); 
-    autoSlide = setInterval(() => { index++; move(); }, 3500); 
-  }
-  slider.addEventListener("mousedown", e => dragStart(e.pageX));
-  window.addEventListener("mousemove", e => dragMove(e.pageX));
-  window.addEventListener("mouseup", dragEnd);
-  slider.addEventListener("touchstart", e => dragStart(e.touches[0].pageX), { passive: true });
-  slider.addEventListener("touchmove", e => dragMove(e.touches[0].pageX), { passive: true });
-  slider.addEventListener("touchend", dragEnd);
-  window.addEventListener("resize", () => { slideWidth = slider.offsetWidth / visible; move(false); });
+function updateDots() {
+  if (!dotsContainer) return;
+  dotsContainer.querySelectorAll(".achievement-dot").forEach((d, i) => {
+    d.classList.toggle("active", i === index % latest.length);
+  });
 }
+
+
+  // Build slides (clone for loop)
+  function buildSlides() {
+    track.innerHTML = "";
+    visible = getVisible();
+
+    const data = [...latest, ...latest.slice(0, visible)];
+
+    data.forEach(ach => {
+      const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image";
+
+      const slide = document.createElement("div");
+      slide.className = "achievement-slide";
+      slide.innerHTML = `
+        <div class="achievement-card">
+          <img src="${imgSrc}" draggable="false">
+          <h6>${ach.title}</h6>
+          <small>${new Date(ach.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</small>
+          <p class="small mt-2">${ach.description}</p>
+        </div>`;
+      track.appendChild(slide);
+    });
+
+    resizeSlides();
+    index = 0;
+    move(false);
+  }
+
+  function resizeSlides() {
+    const slideWidth = slider.offsetWidth / visible;
+
+    document.querySelectorAll(".achievement-slide").forEach(s => {
+      s.style.minWidth = slideWidth + "px";
+    });
+  }
+
+function move(anim = true) {
+  const slideWidth = slider.offsetWidth / visible;
+
+  track.style.transition = anim ? "transform .5s ease" : "none";
+  track.style.transform = `translateX(-${index * slideWidth}px)`;
+
+  updateDots();
+
+  if (index >= latest.length) {
+    setTimeout(() => {
+      track.style.transition = "none";
+      index = 0;
+      track.style.transform = "translateX(0)";
+      updateDots();
+    }, 500);
+  }
+}
+
+
+  buildSlides();
+
+  // Auto slide
+  let timer = setInterval(() => {
+  index++;
+  move();
+  updateDots();
+}, 3000);
+
+
+  let startX = 0;
+let currentX = 0;
+let dragging = false;
+
+function dragStart(x) {
+  clearInterval(timer);
+  dragging = true;
+  startX = x;
+  currentX = x;
+  track.style.transition = "none";
+}
+
+function dragMove(x) {
+  if (!dragging) return;
+  currentX = x;
+
+  const slideWidth = slider.offsetWidth / visible;
+  track.style.transform =
+    `translateX(${-(index * slideWidth) + (currentX - startX)}px)`;
+}
+
+function dragEnd() {
+  if (!dragging) return;
+  dragging = false;
+
+  const diff = currentX - startX;
+  const slideWidth = slider.offsetWidth / visible;
+
+  if (Math.abs(diff) > slideWidth / 4) {
+    index += diff < 0 ? 1 : -1;
+  }
+
+  if (index < 0) index = 0;
+
+  move();
+  
+  timer = setInterval(() => { index++; move(); }, 3000);
+}
+
+// Mouse
+slider.addEventListener("mousedown", e => dragStart(e.pageX));
+window.addEventListener("mousemove", e => dragMove(e.pageX));
+window.addEventListener("mouseup", dragEnd);
+
+// Touch
+slider.addEventListener("touchstart", e => dragStart(e.touches[0].pageX), { passive:true });
+slider.addEventListener("touchmove", e => dragMove(e.touches[0].pageX), { passive:true });
+slider.addEventListener("touchend", dragEnd);
+
+
+  // Resize rebuild
+  window.addEventListener("resize", () => {
+    buildSlides();
+  });
+}
+
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", async () => {

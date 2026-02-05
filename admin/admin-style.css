@@ -1,0 +1,43 @@
+body {
+  font-family: sans-serif;
+  max-width: 600px;
+  margin: 50px auto;
+  background: #070b14;
+  color: #e6ebff;
+}
+
+input,
+textarea,
+button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+  background: #6ea8ff;
+  color: #070b14;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #4d8dff;
+  color: white;
+}
+
+#login-section,
+#form-section {
+  margin-top: 20px;
+  background: #0e1424;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#progress {
+  margin-bottom: 10px;
+  color: #6ea8ff;
+  display: none;
+}
