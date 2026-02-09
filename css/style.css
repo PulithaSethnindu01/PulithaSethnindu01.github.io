@@ -62,6 +62,36 @@ small,
   color: var(--text-muted);
 }
 
+/* ===== SCROLLBAR ===== */
+
+/* Webkit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 12px;             /* width of scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-section); /* track color */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);     /* draggable part color */
+  border-radius: 8px;
+  border: 3px solid var(--bg-section); /* optional padding effect */
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-hover); /* hover effect */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;       /* "auto" or "thin" */
+  scrollbar-color: var(--accent) var(--bg-section); /* thumb track */
+}
+
+
 .animate-on-scroll {
   opacity: 0;
 }
@@ -126,7 +156,7 @@ body.loaded #loader {
   transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-/* ===== HERO SECTION ===== */
+/* ================= HERO SECTION ================= */
 .hero {
   position: relative;
   min-height: 100vh;
@@ -142,11 +172,11 @@ body.loaded #loader {
 #starfield,
 .hero-mainimg {
   position: absolute;
-  inset: 0;
+  inset: 0;             /* top:0; right:0; bottom:0; left:0 */
   z-index: 0;
   pointer-events: none;
   opacity: 1;
-  transition: opacity 1.5s ease;
+  transition: opacity 1.5s ease, transform 1.5s ease;
 }
 
 .hero-mainimg {
@@ -155,36 +185,31 @@ body.loaded #loader {
   height: auto;
   margin: auto;
   top: -10%;
-  background-image: url("../assets/aaa logo.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: contain;
+  background: url("../assets/aaa logo.png") center center / contain no-repeat;
 }
 
 /* ===== HERO CONTENT & MYSTIC IMAGE ===== */
 .hero-content {
   position: relative;
   z-index: 2;
+  text-align: center;
 }
 
 .hero-img {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-image: url("../assets/banner_logo_mystic.png");
-  background-repeat: no-repeat;
-  background-position: right bottom;
-  background-size: contain;
+  background: url("../assets/banner_logo_mystic.png") right bottom / contain no-repeat;
   pointer-events: none;
 }
 
 /* ===== HERO TEXT ===== */
 .hero-title {
+  font-family: "LEMON MILK", sans-serif;
   font-size: 45px;
   font-weight: 400;
   letter-spacing: 4px;
   text-transform: uppercase;
-  font-family: "LEMON MILK", sans-serif;
   color: var(--text-main);
 }
 
@@ -199,6 +224,7 @@ body.loaded #loader {
 .hero .btn-primary {
   background-color: var(--accent);
   border: none;
+  transition: background 0.3s ease;
 }
 
 .hero .btn-primary:hover {
@@ -232,71 +258,73 @@ body.loaded #loader {
 
 .hero.revealed .hero-mainimg {
   opacity: 0;
+  transform: scale(1.2);
   pointer-events: none;
 }
 
-/* ===== REVEAL HINT ===== */
+/* ===== REVEAL HINT AT BOTTOM CENTER ===== */
 .reveal-hint {
   position: absolute;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.9rem;
+  bottom: 60px;                 /* adjust distance from bottom */
+  left: 48%;                     /* horizontal center reference */
+  transform: translateX(-50%);   /* shift exactly to center */
+  font-size: 1rem;
   color: var(--text-muted);
-  opacity: 0.6;
+  opacity: 0.7;
   pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
   animation: pulse 2s infinite;
-
-  /* hidden by default after reveal */
-  visibility: visible;
+  z-index: 3;                    /* above stars/logo */
 }
+
 
 /* hide after reveal */
 .hero.revealed .reveal-hint {
   opacity: 0;
   visibility: hidden;
+  transition: opacity 0.8s ease;
 }
 
+/* optional: subtle pulsing */
 @keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.8;
-  }
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
+
+/* ===== NAVBAR FADE ===== */
 .navbar {
   opacity: 0;
-  transition: opacity 1s ease 1.2s; /* delay fade until hero reveals */
+  transition: opacity 1s ease 1.2s;
 }
 
 body.hero-revealed .navbar {
   opacity: 1;
 }
 
+/* ===== MUTE BUTTON ===== */
 #mute-btn {
   background: none;
   border: none;
-  padding: 1;
-  margin: 0;
-  font-size: 1.3rem; /* adjusts nicely on mobile */
+  padding: 0.2rem 0.5rem;
+  font-size: 1.3rem;
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.3s ease;
 }
 
 #mute-btn i {
-  pointer-events: none; /* only button clickable, not the icon */
+  pointer-events: none; /* only button is clickable */
 }
 
-/* optional: hover/focus effects */
 #mute-btn:hover {
   color: var(--accent);
 }
+
 
 /* ===== SECTIONS ===== */
 .section,

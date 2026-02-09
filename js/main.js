@@ -237,30 +237,46 @@ window.addEventListener("click", () => {
 const hero = document.querySelector(".hero");
 let revealed = false;
 
-// 1️⃣ Auto-reveal if not at top or URL has a hash
-if (window.scrollY > 100 || window.location.hash) {
+// Function to reveal hero
+function revealHero() {
+  if (revealed) return;
   revealed = true;
+
+  // Add revealed class
   hero.classList.add("revealed");
   document.body.classList.add("hero-revealed");
   document.body.classList.remove("lock-scroll");
+
+  // Optional: play click sound
+  if (clickSound) {
+    clickSound.currentTime = 0;
+    clickSound.play();
+  }
+
+  // Optional: fade stars slightly
+  const starfield = document.getElementById("starfield");
+  if (starfield) {
+    starfield.style.transition = "opacity 1.5s ease";
+    starfield.style.opacity = "0.6";
+  }
+}
+
+// Auto reveal if page is scrolled down or has hash
+if (window.scrollY > 100 || window.location.hash) {
+  revealHero();
 } else {
-  // Lock scroll if we are at top
   document.body.classList.add("lock-scroll");
 }
 
-// 2️⃣ Click to reveal
+// Click to reveal
 hero?.addEventListener("click", e => {
-  if (e.target.closest("a, button") || revealed) return;
+  if (e.target.closest("a, button")) return;
+  revealHero();
+});
 
-  revealed = true;
-  if (clickSound) { 
-    clickSound.currentTime = 0; 
-    clickSound.play(); 
-  }
-
-  hero.classList.add("revealed");
-  document.body.classList.add("hero-revealed");
-  document.body.classList.remove("lock-scroll");
+// Scroll to reveal
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 50) revealHero();
 });
 
 
