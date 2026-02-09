@@ -234,23 +234,35 @@ window.addEventListener("click", () => {
   }
 });
 
-// ===============================
-// Hero Reveal
-// ===============================
 const hero = document.querySelector(".hero");
 let revealed = false;
-document.body.classList.add("lock-scroll");
 
+// 1️⃣ Auto-reveal if not at top or URL has a hash
+if (window.scrollY > 100 || window.location.hash) {
+  revealed = true;
+  hero.classList.add("revealed");
+  document.body.classList.add("hero-revealed");
+  document.body.classList.remove("lock-scroll");
+} else {
+  // Lock scroll if we are at top
+  document.body.classList.add("lock-scroll");
+}
+
+// 2️⃣ Click to reveal
 hero?.addEventListener("click", e => {
   if (e.target.closest("a, button") || revealed) return;
 
   revealed = true;
-  if (clickSound) { clickSound.currentTime = 0; clickSound.play(); }
+  if (clickSound) { 
+    clickSound.currentTime = 0; 
+    clickSound.play(); 
+  }
 
   hero.classList.add("revealed");
   document.body.classList.add("hero-revealed");
   document.body.classList.remove("lock-scroll");
 });
+
 
 // ===============================
 // Animate On Scroll
