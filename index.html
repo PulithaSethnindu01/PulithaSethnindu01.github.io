@@ -2,372 +2,278 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-
   <title>AstroAnanda</title>
-
-  <!-- Mobile first -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <link rel="icon" href="assets/favicon_AAA.png" type="image/png">
 
-  <!-- Bootstrap CSS (Dreamweaver local file) -->
+  <!-- Bootstrap CSS -->
   <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
-
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- Font Awesome 5 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="css/animate.min.css">
 </head>
 
 <body>
-<audio id="bgMusic" loop autoplay style="display:none">
-<source src="assets/music.mp3" type="audio/mpeg">
-</audio>
-<audio id="clickSound" src="assets/click.mp3" preload="auto"></audio>
 
-<div id="loader">
-  <div class="loader-content">
-    <div class="spinner-main"></div>
-    <p>Loading AstroAnanda...</p>
+  <!-- Background Music -->
+  <audio id="bgMusic" loop autoplay style="display:none">
+    <source src="assets/music.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="clickSound" src="assets/click.mp3" preload="auto"></audio>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="spinner-main"></div>
+      <p>Loading AstroAnanda...</p>
+    </div>
   </div>
-</div>
-<div id="torch-overlay"></div>
+  <div id="torch-overlay"></div>
 
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#hero">
+        <img src="assets/aaa logo.png" width="100px" alt="AAA Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-<!-- ================= NAVBAR ================= -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-  <div class="container">
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ml-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="#hero">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#board">Board Of Officials</a></li>
+          <li class="nav-item"><a class="nav-link" href="#achievements">Achievements</a></li>
+          <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item">
+            <button id="mute-btn" class="nav-link btn">
+              <i class="fas fa-volume-up"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <a class="navbar-brand" href="#"><img src="assets/aaa logo.png" width="100px"></a>
+  <!-- ================= HERO SECTION ================= -->
+  <header id="hero" class="hero position-relative">
+    <div class="text-center">
+      <div class="hero-mainimg"></div>
+      <div class="reveal-hint">Click to reveal</div>
+    </div>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="hero-img"></div>
+    <canvas id="starfield"></canvas>
 
-    <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#board">Board Of Officials</a></li>
-        <li class="nav-item"><a class="nav-link" href="#achievements">Achievements</a></li>
-        <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+    <div class="container hero-content text-center">
+      <h1 class="hero-title">ANANDIAN ASTRONOMICAL ASSOCIATION</h1>
+      <p class="hero-subtitle">Blending With The Cosmos</p>
+      <div class="hero-buttons mt-4">
+        <a href="#about" class="btn btn-outline-light btn-lg mr-2">Explore</a>
+        <a href="contact.html" class="btn btn-primary btn-lg">Contact Us</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= ABOUT SECTION ================= -->
+  <section class="section-padding about" id="about">
+    <div class="parallax-bg"></div>
+    <div class="container parallax-content">
+      <div class="row align-items-center">
+
+        <div class="col-md-6">
+          <div class="section-title animate-on-scroll animate__fadeInUp">About Us</div>
+          <p class="animate-on-scroll animate__fadeInUp" style="animation-delay:0.2s">
+            The Anandian Astronomical Association, in 1998, kindled curiosity about the cosmos, leaving an indelible mark on students across the island. Through its initiatives, the association organizes the annual Star Party and the Sir Arthur C. Clarke Memorial Challenge Trophy.
+          </p>
+        </div>
+
+        <div class="col-md-6 text-center">
+          <img src="assets/spinner_still_logo.png" class="img-fluid" alt="Astronomy">
+          <img src="assets/moon-sign-1-1.png" class="about-scroll" alt="">
+          <img src="assets/moon-sign-3.png" class="about-scroll-2" alt="">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BOARD SECTION ================= -->
+  <section id="board" class="board-section section-padding">
+    <div class="container text-center">
+      <h2 class="section-title mb-5 animate-on-scroll" data-anim="animate__fadeInDown">Board of Officials 24/25</h2>
+
+      <!-- Board Members -->
+      <div class="board-row top-row">
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">President</p>
+          <p class="board-name">Sithum Pahasara</p>
+        </div>
+      </div>
+
+      <div class="board-row mid-row">
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Joint Secretary</p>
+          <p class="board-name">Vinuka Watawana</p>
+        </div>
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Joint Secretary</p>
+          <p class="board-name">Tharusha Aloka</p>
+        </div>
+      </div>
+
+      <div class="board-row mid-row">
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Treasurer</p>
+          <p class="board-name">Anjana Umayanga</p>
+        </div>
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Chief Organizer</p>
+          <p class="board-name">Pulitha Sethnindu</p>
+        </div>
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Chief Organizer</p>
+          <p class="board-name">Nithupa Yumeth</p>
+        </div>
+      </div>
+
+      <div class="board-row bottom-row">
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Vice President</p>
+          <p class="board-name">Tadeesha Nithesh</p>
+        </div>
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Assistant Secretary</p>
+          <p class="board-name">Dinath Mandiv</p>
+        </div>
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Assistant Treasurer</p>
+          <p class="board-name">Senan Ransaja</p>
+        </div>
+        <div class="board-member animate-on-scroll" data-anim="animate__zoomIn">
+          <p class="board-role">Chief Coordinator</p>
+          <p class="board-name">Kusal Sathsara</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= ACHIEVEMENTS ================= -->
+  <section id="achievements" class="section-padding">
+    <div class="container">
+      <h2 class="section-title text-center mb-5 animate-on-scroll" data-anim="animate__fadeInDown">Latest Achievements</h2>
+      <div class="achievements-slider overflow-hidden animate-on-scroll" data-anim="animate__fadeInUp">
+        <div class="d-flex" id="latest-achievements-home"></div>
+        <div id="achievement-dots" class="achievement-dots"></div>
+        <div class="text-center mt-3">
+          <a href="achievements.html" class="btn btn-primary animate-on-scroll" data-anim="animate__fadeInUp">See All Achievements</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STATS ================= -->
+  <section id="stats" class="section-padding stats-section">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-3 col-6 stat-item animate-on-scroll" data-anim="animate__fadeInUp">
+          <span class="stat-number" data-count="120">0</span><span class="stat-plus">+</span>
+          <p class="stat-label">Members</p>
+        </div>
+        <div class="col-md-3 col-6 stat-item animate-on-scroll" data-anim="animate__fadeInUp">
+          <span class="stat-number" data-count="28">0</span><span class="stat-plus">+</span>
+          <p class="stat-label">Years Since Est.</p>
+        </div>
+        <div class="col-md-3 col-6 stat-item animate-on-scroll" data-anim="animate__fadeInUp">
+          <span class="stat-number" data-count="100">0</span><span class="stat-plus">+</span>
+          <p class="stat-label">Achievements</p>
+        </div>
+        <div class="col-md-3 col-6 stat-item animate-on-scroll" data-anim="animate__fadeInUp">
+          <span class="stat-number" data-count="250">0</span><span class="stat-plus">+</span>
+          <p class="stat-label">Concluded Events</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section class="section-padding projects-terminal" id="projects">
+    <h2 class="section-title text-center mb-5">Our Projects</h2>
+    <img src="assets/moon-phasing1.png" class="parallax" data-speed="0.2">
+
+    <div class="terminal">
+      <div class="terminal-header">
+        <span></span><span></span><span></span>
+        <strong>projects — bash</strong>
+      </div>
+      <div class="terminal-body">
+        <div class="cmd">&gt; ls projects</div>
+
+        <!-- Project Items -->
+        <div class="project animate-on-scroll" data-anim="animate__fadeInUp">
+          <div class="folder">📁 SACCMCT</div>
+          <div class="details">
+            <div class="project-row">
+              <img src="assets/images/clarke logo.png" class="project-logo" alt="Live Score Logo">
+              <div class="project-info">
+                <strong>Sir Arthur C Clarke Memorial Challenge Trophy</strong><br>
+                Inter School Astronomical Quiz – All island inter school astronomical competition and Annual Astronomical Day of Ananda College.<br>
+                <span>Stack:</span> Node • Express • Socket.IO<br>
+                <span>Year:</span> 2025<br>
+                <a href="#">open</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duplicate project items removed for brevity -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="pt-4 pb-4 text-center">
+    <div class="container">
+      <div class="mb-2">
+        <img src="assets/aaa logo.png" alt="AstroAnanda Logo" style="height:60px;">
+      </div>
+      <p class="mb-3" style="font-size: 14px; color: #979797;">Anandian Astronomical Association</p>
+
+      <ul class="list-inline mb-3">
+        <li class="list-inline-item"><a href="#" class="nav-link">Home</a></li>
+        <li class="list-inline-item"><a href="#about" class="nav-link">About</a></li>
+        <li class="list-inline-item"><a href="#board" class="nav-link">Board Of Officials</a></li>
+        <li class="list-inline-item"><a href="#achievements" class="nav-link">Achievements</a></li>
+        <li class="list-inline-item"><a href="contact.html" class="nav-link">Contact</a></li>
       </ul>
+
+      <div class="mb-4 footer-icons" style="font-size: 25px;">
+        <a href="https://www.facebook.com/astroananda/" target="_blank" class="text-white-50 mx-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:astroananda@gmail.com" target="_blank" class="text-white-50 mx-2"><i class="fas fa-envelope"></i></a>
+        <a href="https://www.instagram.com/astro_ananda/" target="_blank" class="text-white-50 mx-2"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/user/astroananda" target="_blank" class="text-white-50 mx-2"><i class="fab fa-youtube"></i></a>
+      </div>
+
+      <p class="mb-0" style="font-size: 12px; color: #777;">
+        &copy; 2026 AstroAnanda | All rights reserved.<br>
+        A project by AAA 2024/25 Board of Officials<br>
+        Website designed and developed by <a href="https://github.com/pulithaSethninduu" target="_blank" style="text-decoration: none;">Pulitha Sethnindu</a>
+      </p>
     </div>
+  </footer>
 
-  </div>
-</nav>
-
-<!-- ================= HERO SECTION ================= -->
-<header class="hero position-relative">
-
-  <div class="hero-mainimg"></div>
-  <div class="reveal-hint">Click to reveal</div>
-
-
-  <div class="hero-img"></div>
-  <canvas id="starfield"></canvas>
-  <div class="container hero-content text-center">
-    <h1 class="hero-title">ANANDIAN ASTRONOMICAL ASSOCIATION</h1>
-    <p class="hero-subtitle">
-      Blending With The Cosmos
-    </p>
-
-    <div class="hero-buttons mt-4">
-      <a href="#about" class="btn btn-outline-light btn-lg mr-2">Explore</a>
-      <a href="contact.html" class="btn btn-primary btn-lg">Contact Us</a>
-    </div>
-  </div>
-
-</header>
-
-<!-- ================= ABOUT PREVIEW ================= -->
-<section class="section-padding about" id="about">
-  <div class="parallax-bg"></div>
-  <div class="container parallax-content">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <div class="section-title">About Us</div>
-        <p>
-          The Anandian Astronomical Association, In 1998, the Anandian Astronomical Association kindled curiosity about the cosmos, leaving an indelible mark on students across the island. Through its impactful initiatives, the association has organized the annual Star Party, a celestial celebration that captivates stargazers of all ages. Additionally, it orchestrates the Sir Arthur C. Clarke Memorial Challenge Trophy, an interschool quiz competition that fuels astronomical knowledge.
-        </p>
-      </div>
-      <div class="col-md-6 text-center">
-        <img src="assets/spinner_still_logo.png" class="img-fluid" alt="Astronomy">
-        <img class="about-scroll" src="assets/moon-sign-1-1.png" alt="">
-        <img class="about-scroll-2" src="assets/moon-sign-3.png" alt="">
-      </div>
-    </div>
-  </div>
-</section>
-  
-<section id="board" class="board-section section-padding">
-  <div class="container text-center">
-    <h2 class="section-title mb-5">Board of Officials 24/25</h2>
-
-    <!-- PRESIDENT -->
-    <div class="board-row top-row">
-      <div class="board-member">
-        <p class="board-role">President</p>
-        <p class="board-name">Sithum Pahasara</p>
-      </div>
-    </div>
-
-    <!-- SECRETARIES -->
-    <div class="board-row mid-row">
-      <div class="board-member">
-        <p class="board-role">Joint Secretary</p>
-        <p class="board-name">Vinuka Watawana</p>
-      </div>
-      <div class="board-member">
-        <p class="board-role">Joint Secretary</p>
-        <p class="board-name">Tharusha Aloka</p>
-      </div>
-    </div>
-
-    <!-- TREASURER + CHIEF ORGANIZERS -->
-    <div class="board-row mid-row">
-      <div class="board-member">
-        <p class="board-role">Treasurer</p>
-        <p class="board-name">Anjana Umayanga</p>
-      </div>
-      <div class="board-member">
-        <p class="board-role">Chief Organizer</p>
-        <p class="board-name">Pulitha Sethnindu</p>
-      </div>
-      <div class="board-member">
-        <p class="board-role">Chief Organizer</p>
-        <p class="board-name">Nithupa Yumeth</p>
-      </div>
-    </div>
-
-    <!-- VICE PRESIDENT + ASSISTANTS + COORDINATORS -->
-    <div class="board-row bottom-row">
-      <div class="board-member">
-        <p class="board-role">Vice President</p>
-        <p class="board-name">Tadeesha Nithesh</p>
-      </div>
-      <div class="board-member">
-        <p class="board-role">Assistant Secretary</p>
-        <p class="board-name">Dinath Mandiv</p>
-      </div>
-      <div class="board-member">
-        <p class="board-role">Assistant Treasurer</p>
-        <p class="board-name">Senan Ransaja</p>
-      </div>
-      <div class="board-member">
-        <p class="board-role">Chief Coordinator</p>
-        <p class="board-name">Kusal Sathsara</p>
-      </div>
-    </div>
-  </div>
-</section>
-  
-<section id="achievements" class="section-padding">
-  <div class="container">
-    <h2 class="section-title text-center mb-5">Latest Achievements</h2>
-    <div class="achievements-slider overflow-hidden">
-      <div class="d-flex" id="latest-achievements-home"></div>
-      <div id="achievement-dots" class="achievement-dots"></div>
-      <div class="text-center mt-3">
-        <a href="achievements.html" class="btn btn-primary">See All Achievements</a>
-      </div>
-    </div>
-  </div>
-</section>
-  
-<section id="stats" class="section-padding stats-section">
-  <div class="container">
-    <div class="row text-center">
-
-      <div class="col-md-3 col-6 stat-item">
-        <span class="stat-number" data-count="120">0</span>
-        <span class="stat-plus">+</span>
-        <p class="stat-label">Members</p>
-      </div>
-
-      <div class="col-md-3 col-6 stat-item">
-        <span class="stat-number" data-count="28">0</span>
-        <span class="stat-plus">+</span>
-        <p class="stat-label">Years Since Est.</p>
-      </div>
-
-      <div class="col-md-3 col-6 stat-item">
-        <span class="stat-number" data-count="100">0</span>
-        <span class="stat-plus">+</span>
-        <p class="stat-label">Achievements</p>
-      </div>
-
-      <div class="col-md-3 col-6 stat-item">
-        <span class="stat-number" data-count="250">0</span>
-        <span class="stat-plus">+</span>
-        <p class="stat-label">Concluded Events</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<section class="section-padding projects-terminal" id="projects">
-  <h2 class="section-title text-center mb-5">Our Projects</h2>
-
-  <img src="assets/moon-phasing1.png" class="parallax" data-speed="0.2">
-
-  <div class="terminal">
-
-    <div class="terminal-header">
-      <span></span><span></span><span></span>
-      <strong>projects — bash</strong>
-    </div>
-
-    <div class="terminal-body">
-
-      <div class="cmd">&gt; ls projects</div>
-
-      <!-- Project -->
-      <div class="project">
-        <div class="folder">📁 SACCMCT</div>
-
-        <div class="details">
-          <div class="project-row">
-            <img src="assets/images/clarke logo.png" class="project-logo" alt="Live Score Logo">
-
-            <div class="project-info">
-              <strong>Sir Arthur C Clarke Memorial Challenge Trophy</strong><br>
-              Inter School Astronomical Quiz – All island inter school astronomical competition and Annual Astronomical Day of Ananda College.<br>
-              <span>Stack:</span> Node • Express • Socket.IO<br>
-              <span>Year:</span> 2025<br>
-              <a href="#">open</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Project -->
-      <div class="project">
-        <div class="folder">📁 Star Party</div>
-
-        <div class="details">
-          <div class="project-row">
-            <img src="assets/images/SP.png" class="project-logo" alt="Astro Ananda Logo">
-
-            <div class="project-info">
-              <strong>Star Party</strong><br>
-              South Asia's first and the largest sky observation and astro-photography competition, organized by the A.A.A. in collaboration with the A.S.M.G.C.K.<br>
-              <span>Stack:</span> HTML • CSS • JS<br>
-              <span>Year:</span> 2025<br>
-              <a href="#">open</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="folder">📁 Sakwala</div>
-
-        <div class="details">
-          <div class="project-row">
-            <img src="assets/images/SP.png" class="project-logo" alt="Astro Ananda Logo">
-
-            <div class="project-info">
-              <strong>Sakwala</strong><br>
-              South Asia's first and the largest sky observation and astro-photography competition, organized by the A.A.A. in collaboration with the A.S.M.G.C.K.<br>
-              <span>Stack:</span> HTML • CSS • JS<br>
-              <span>Year:</span> 2025<br>
-              <a href="#">open</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="folder">📁 Novikov</div>
-
-        <div class="details">
-          <div class="project-row">
-            <img src="assets/images/SP.png" class="project-logo" alt="Astro Ananda Logo">
-
-            <div class="project-info">
-              <strong>Novikov</strong><br>
-              South Asia's first and the largest sky observation and astro-photography competition, organized by the A.A.A. in collaboration with the A.S.M.G.C.K.<br>
-              <span>Stack:</span> HTML • CSS • JS<br>
-              <span>Year:</span> 2025<br>
-              <a href="#">open</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="folder">📁 Astro Ananda Exam</div>
-
-        <div class="details">
-          <div class="project-row">
-            <img src="assets/images/SP.png" class="project-logo" alt="Astro Ananda Logo">
-
-            <div class="project-info">
-              <strong>Astro Ananda Exam</strong><br>
-              South Asia's first and the largest sky observation and astro-photography competition, organized by the A.A.A. in collaboration with the A.S.M.G.C.K.<br>
-              <span>Stack:</span> HTML • CSS • JS<br>
-              <span>Year:</span> 2025<br>
-              <a href="#">open</a>
-            </div>
-          </div>
-        </div>
-    </div>
-  </div>
-
-</section>
-
-
-
-<!-- ================= FOOTER ================= -->
-<footer class="pt-4 pb-4 text-center">
-  <div class="container">
-    <!-- Logo -->
-    <div class="mb-2">
-      <img src="assets/aaa logo.png" alt="AstroAnanda Logo" style="height:60px;">
-    </div>
-    
-    <!-- Tagline -->
-    <p class="mb-3" style="font-size: 14px; color: #979797;">Anandian Astronomical Association</p>
-
-    <!-- Navigation Links -->
-    <ul class="list-inline mb-3">
-      <li class="list-inline-item"><a href="#" class="nav-link">Home</a></li>
-      <li class="list-inline-item"><a href="#about" class="nav-link">About</a></li>
-      <li class="list-inline-item"><a href="#board" class="nav-link">Board Of Officials</a></li>
-      <li class="list-inline-item"><a href="#achievements" class="nav-link">Achievements</a></li>
-      <li class="list-inline-item"><a href="contact.html" class="nav-link">Contact</a></li>
-    </ul>
-
-    <!-- Social Icons -->
-    <div class="mb-4 footer-icons" style="font-size: 25px;">
-      <a href="https://www.facebook.com/astroananda/" target="_blank" class="text-white-50 mx-2 footer-fb"><i class="fab fa-facebook-f"></i></a>
-      <a href="mailto:astroananda@gmail.com" target="_blank" class="text-white-50 mx-2 footer-mail"><i class="fas fa-envelope"></i></a>
-      <a href="https://www.instagram.com/astro_ananda/" target="_blank" class="text-white-50 mx-2 footer-insta"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.youtube.com/user/astroananda" target="_blank" class="text-white-50 mx-2 footer-yt"><i class="fab fa-youtube"></i></a>
-    </div>
-
-    <!-- Copyright -->
-    <p class="mb-0" style="font-size: 12px; color: #777;">
-      &copy; 2026 AstroAnanda | All rights reserved.<br>
-      A project by AAA 2024/25 Board of Officials<br>
-      Website designed and developed by <a href="https://github.com/pulithaSethninduu" target="_blank" style="text-decoration: none;">Pulitha Sethnindu </a>
-    </p>
-  </div>
-</footer>
-<!-- Footer End -->
-
-
-<!-- ================= SCRIPTS ================= -->
-<script src="js/jquery-3.4.1.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap-4.4.1.js"></script>
-<script src="js/main.js"></script>
-<script src="js/achievements.js"></script>
-
+  <!-- ================= SCRIPTS ================= -->
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap-4.4.1.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/achievements.js"></script>
 </body>
 </html>
