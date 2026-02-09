@@ -22,8 +22,31 @@
 /* ===== GLOBAL ===== */
 body {
   font-family: "Segoe UI", sans-serif;
-  background: var(--bg-main);
+  background-image: url(../assets/body-bg.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* 🔒 stays fixed on scroll */
   color: var(--text-main);
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url(../assets/body-bg.png) center / cover no-repeat;
+  z-index: -1;
+}
+
+body.locked {
+  overflow: hidden;
+  height: 100vh;
+}
+
+
+footer {
+  background: var(--bg-main);
 }
 
 a {
@@ -104,28 +127,33 @@ body.loaded #loader {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  cursor: pointer; /* indicate click to reveal */
 }
 
-#starfield {
+/* ===== STARFIELD & MAIN LOGO ===== */
+#starfield,
+.hero-mainimg {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background:
-    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,.8), transparent),
-    radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,.6), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,.5), transparent),
-    radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,.7), transparent),
-    radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,.6), transparent);
-  background-repeat: repeat;
-  background-size: 200px 200px;
-  animation: starScroll 40s linear infinite;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 1.5s ease;
 }
 
-@keyframes starScroll {
-  from { background-position: 0 0; }
-  to { background-position: 0 1000px; }
+.hero-mainimg {
+  width: 20%;
+  max-height: 50%;
+  height: auto;
+  margin: auto;
+  top: -10%;
+  background-image: url("../assets/aaa logo.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
 }
 
+/* ===== HERO CONTENT & MYSTIC IMAGE ===== */
 .hero-content {
   position: relative;
   z-index: 2;
@@ -142,6 +170,7 @@ body.loaded #loader {
   pointer-events: none;
 }
 
+/* ===== HERO TEXT ===== */
 .hero-title {
   font-size: 45px;
   font-weight: 400;
@@ -158,6 +187,7 @@ body.loaded #loader {
   margin: 0 auto;
 }
 
+/* ===== HERO BUTTONS ===== */
 .hero .btn-primary {
   background-color: var(--accent);
   border: none;
@@ -171,9 +201,64 @@ body.loaded #loader {
   color: #000;
 }
 
+/* ===== INITIAL FADE STATE ===== */
+.hero-title,
+.hero-subtitle,
+.hero-buttons,
+.hero-img,
+.navbar {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+/* ===== REVEALED STATE ===== */
+.hero.revealed .hero-title,
+.hero.revealed .hero-subtitle,
+.hero.revealed .hero-buttons,
+.hero.revealed .hero-img,
+.hero.revealed .navbar {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.hero.revealed .hero-mainimg {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== REVEAL HINT ===== */
+.reveal-hint {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: pulse 2s infinite;
+
+  /* hidden by default after reveal */
+  visibility: visible;
+}
+
+/* hide after reveal */
+.hero.revealed .reveal-hint {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+
 /* ===== SECTIONS ===== */
 .section, .section-padding {
-  background: var(--bg-section);
   color: var(--text-main);
 }
 
@@ -203,6 +288,34 @@ body.loaded #loader {
   position: relative;
   overflow: hidden;
   color: var(--text-main);
+}
+
+.about-scroll {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 80%;
+  pointer-events: none;
+  animation: rotate 30s linear infinite;;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.about-scroll-2 {
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  width: 90%;
+  pointer-events: none;
+  animation: rotate2 30s linear infinite;;
+}
+
+@keyframes rotate2 {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
 }
 
 .parallax-bg {
@@ -410,9 +523,7 @@ body.loaded #loader {
 }
 
 /* ===== TERMINAL PROJECTS ===== */
-
 .projects-terminal {
-  min-height: 100vh;       /* full viewport height */
   width: 100%;             /* full width */
   padding: 70px 20px;      /* keep padding */
   display: flex;           /* flex to center content */
@@ -420,6 +531,17 @@ body.loaded #loader {
   justify-content: center; /* vertical centering */
   align-items: center;     /* horizontal centering */
   box-sizing: border-box;  /* include padding in size */
+  position: relative;
+}
+
+.projects-terminal .parallax {
+  position: absolute;
+  top: -60%;        /* move up */
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .terminal{
@@ -580,6 +702,7 @@ body.loaded #loader {
 .stats-section {
   position: relative;
   text-align: center;
+  user-select: none;
 }
 
 .stat-item {
@@ -615,7 +738,14 @@ body.loaded #loader {
   margin: 15px auto 0;
   background: linear-gradient(90deg, transparent, var(--accent), transparent);
   opacity: 0.3;
+  transition: opacity 1s ease;
 }
+
+.stat-item:hover::after {
+  opacity: 1;
+  width: 60px;
+}
+
 
 .footer-icons i{
   transition: color 0.3s ease; /* Adjust duration (0.5s) as needed */

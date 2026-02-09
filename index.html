@@ -22,6 +22,10 @@
 </head>
 
 <body>
+<audio id="bgMusic" loop autoplay style="display:none">
+<source src="assets/music.mp3" type="audio/mpeg">
+</audio>
+<audio id="clickSound" src="assets/click.mp3" preload="auto"></audio>
 
 <div id="loader">
   <div class="loader-content">
@@ -29,6 +33,8 @@
     <p>Loading AstroAnanda...</p>
   </div>
 </div>
+<div id="torch-overlay"></div>
+
 
 <!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -56,12 +62,13 @@
 
 <!-- ================= HERO SECTION ================= -->
 <header class="hero position-relative">
-  
+
+  <div class="hero-mainimg"></div>
+  <div class="reveal-hint">Click to reveal</div>
+
+
   <div class="hero-img"></div>
-
-  <!-- Star background canvas (we’ll animate later) -->
-  <div id="starfield"></div>
-
+  <canvas id="starfield"></canvas>
   <div class="container hero-content text-center">
     <h1 class="hero-title">ANANDIAN ASTRONOMICAL ASSOCIATION</h1>
     <p class="hero-subtitle">
@@ -89,6 +96,8 @@
       </div>
       <div class="col-md-6 text-center">
         <img src="assets/spinner_still_logo.png" class="img-fluid" alt="Astronomy">
+        <img class="about-scroll" src="assets/moon-sign-1-1.png" alt="">
+        <img class="about-scroll-2" src="assets/moon-sign-3.png" alt="">
       </div>
     </div>
   </div>
@@ -201,8 +210,10 @@
   </div>
 </section>
 
-<section class=" section-padding projects-terminal" id="projects">
+<section class="section-padding projects-terminal" id="projects">
   <h2 class="section-title text-center mb-5">Our Projects</h2>
+
+  <img src="assets/moon-phasing1.png" class="parallax" data-speed="0.2">
 
   <div class="terminal">
 
@@ -289,6 +300,22 @@
         </div>
       </div>
 
+      <div class="project">
+        <div class="folder">📁 Astro Ananda Exam</div>
+
+        <div class="details">
+          <div class="project-row">
+            <img src="assets/images/SP.png" class="project-logo" alt="Astro Ananda Logo">
+
+            <div class="project-info">
+              <strong>Astro Ananda Exam</strong><br>
+              South Asia's first and the largest sky observation and astro-photography competition, organized by the A.A.A. in collaboration with the A.S.M.G.C.K.<br>
+              <span>Stack:</span> HTML • CSS • JS<br>
+              <span>Year:</span> 2025<br>
+              <a href="#">open</a>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 
@@ -297,7 +324,7 @@
 
 
 <!-- ================= FOOTER ================= -->
-<footer class="container pt-4 pb-4 text-center">
+<footer class="pt-4 pb-4 text-center">
   <div class="container">
     <!-- Logo -->
     <div class="mb-2">
@@ -328,7 +355,7 @@
     <p class="mb-0" style="font-size: 12px; color: #777;">
       &copy; 2026 AstroAnanda | All rights reserved.<br>
       A project by AAA 2024/25 Board of Officials<br>
-      Website designed and developed by <a href="https://github.com/pulithaSethninduu" target="_blank">Pulitha Sethnindu </a>
+      Website designed and developed by <a href="https://github.com/pulithaSethninduu" target="_blank" style="text-decoration: none;">Pulitha Sethnindu </a>
     </p>
   </div>
 </footer>
