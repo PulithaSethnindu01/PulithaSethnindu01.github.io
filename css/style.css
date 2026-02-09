@@ -29,6 +29,7 @@ body {
   background-attachment: fixed; /* 🔒 stays fixed on scroll */
   color: var(--text-main);
   min-height: 100vh;
+  background-color: #000;
 }
 
 body::before {
@@ -323,6 +324,24 @@ body.hero-revealed .navbar {
 
 #mute-btn:hover {
   color: var(--accent);
+}
+
+/* Show hero content normally on non-reveal pages */
+body:not(.hero-reveal-page) .hero-title,
+body:not(.hero-reveal-page) .hero-subtitle,
+body:not(.hero-reveal-page) .hero-buttons,
+body:not(.hero-reveal-page) .hero-img {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+/* Also show hero main image & starfield normally */
+body:not(.hero-reveal-page) .hero-mainimg,
+body:not(.hero-reveal-page) #starfield {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: none !important;
 }
 
 

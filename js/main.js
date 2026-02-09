@@ -234,50 +234,55 @@ window.addEventListener("click", () => {
   }
 });
 
-const hero = document.querySelector(".hero");
-let revealed = false;
+document.addEventListener("DOMContentLoaded", () => {
+  // Only run hero reveal on pages with 'hero-reveal-page'
+  if (!document.body.classList.contains("hero-reveal-page")) return;
 
-// Function to reveal hero
-function revealHero() {
-  if (revealed) return;
-  revealed = true;
+  const hero = document.querySelector(".hero");
+  if (!hero) return; // safety check
+  let revealed = false;
 
-  // Add revealed class
-  hero.classList.add("revealed");
-  document.body.classList.add("hero-revealed");
-  document.body.classList.remove("lock-scroll");
+  function revealHero() {
+    if (revealed) return;
+    revealed = true;
 
-  // Optional: play click sound
-  if (clickSound) {
-    clickSound.currentTime = 0;
-    clickSound.play();
+    hero.classList.add("revealed");
+    document.body.classList.add("hero-revealed");
+    document.body.classList.remove("lock-scroll");
+
+    // Optional: play click sound
+    if (typeof clickSound !== "undefined" && clickSound) {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    // Optional: fade stars slightly
+    const starfield = document.getElementById("starfield");
+    if (starfield) {
+      starfield.style.transition = "opacity 1.5s ease";
+      starfield.style.opacity = "0.6";
+    }
   }
 
-  // Optional: fade stars slightly
-  const starfield = document.getElementById("starfield");
-  if (starfield) {
-    starfield.style.transition = "opacity 1.5s ease";
-    starfield.style.opacity = "0.6";
+  // Auto reveal if page is scrolled down or has hash
+  if (window.scrollY > 100 || window.location.hash) {
+    revealHero();
+  } else {
+    document.body.classList.add("lock-scroll");
   }
-}
 
-// Auto reveal if page is scrolled down or has hash
-if (window.scrollY > 100 || window.location.hash) {
-  revealHero();
-} else {
-  document.body.classList.add("lock-scroll");
-}
+  // Click to reveal (ignores links/buttons)
+  hero.addEventListener("click", e => {
+    if (e.target.closest("a, button")) return;
+    revealHero();
+  });
 
-// Click to reveal
-hero?.addEventListener("click", e => {
-  if (e.target.closest("a, button")) return;
-  revealHero();
+  // Scroll to reveal
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 50) revealHero();
+  });
 });
 
-// Scroll to reveal
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 50) revealHero();
-});
 
 
 // ===============================
