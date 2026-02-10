@@ -78,13 +78,47 @@ async function addAchievement() {
     const sheetJson = await sheetRes.json();
 
     if (sheetJson.status === "success") {
-      alert("Achievement added successfully!");
-      fileInput.value = "";
-      document.getElementById("title").value = "";
-      document.getElementById("date").value = "";
-      document.getElementById("desc").value = "";
-      loadAchievements();
-    } else {
+  const newId = sheetJson.id; // unique achievement ID
+  alert("Achievement added successfully!");
+
+  // Reset form fields
+  fileInput.value = "";
+  document.getElementById("title").value = "";
+  document.getElementById("date").value = "";
+  document.getElementById("desc").value = "";
+
+  // Load updated achievements
+  loadAchievements();
+
+  // Remove previous copy link if exists
+  const oldCopyDiv = document.getElementById("copy-link-div");
+  if (oldCopyDiv) oldCopyDiv.remove();
+
+  // Create copy link section
+  const copyDiv = document.createElement("div");
+  copyDiv.id = "copy-link-div";
+  copyDiv.style.marginTop = "10px";
+
+  const link = `${window.location.origin}/achievements.html?ach=${newId}`;
+  copyDiv.innerHTML = `
+    <input type="text" value="${link}" id="copy-link-input" readonly style="width:70%; padding:5px;">
+    <button id="copy-link-btn" style="padding:5px 10px; margin-left:5px;">Copy Link</button>
+  `;
+
+  // Insert below submit button
+  const submitBtn = document.querySelector("#form-section button");
+  submitBtn.insertAdjacentElement("afterend", copyDiv);
+
+  // Copy functionality
+  document.getElementById("copy-link-btn").onclick = () => {
+    const input = document.getElementById("copy-link-input");
+    input.select();
+    input.setSelectionRange(0, 99999); // for mobile
+    document.execCommand("copy");
+    alert("Link copied to clipboard!");
+  };
+}
+ else {
       alert("Error: " + sheetJson.message);
     }
 

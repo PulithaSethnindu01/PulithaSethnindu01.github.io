@@ -30,13 +30,22 @@ async function loadAllAchievements(containerId) {
     const col = document.createElement("div");
     col.className = "col-md-4 mb-4 achievement-col";
     col.dataset.year = year;
-    col.innerHTML = `
-      <div class="achievement-card">
-        <img data-src="${imgSrc}" src="https://via.placeholder.com/300x200?text=Loading..." loading="lazy" draggable="false" alt="${ach.title}">
-        <h5>${ach.title}</h5>
-        <small>${new Date(ach.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</small>
-        <p>${ach.description}</p>
-      </div>`;
+    const link = ach.link || "#";
+col.innerHTML = `
+  <div class="achievement-card">
+    <img data-src="${imgSrc}" src="https://via.placeholder.com/300x200?text=Loading..." loading="lazy" draggable="false">
+    <h5>${ach.title}</h5>
+    <small>${new Date(ach.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</small>
+    <p>${ach.description}</p>
+  </div>
+`;
+
+col.querySelector(".achievement-card").addEventListener("click", () => {
+  openAchievementModal(ach);
+  // Update URL without reloading
+  history.pushState({ id: ach.id }, "", `?ach=${ach.id}`);
+});
+
     container.appendChild(col);
   });
 
@@ -153,12 +162,21 @@ function updateDots() {
       const slide = document.createElement("div");
       slide.className = "achievement-slide";
       slide.innerHTML = `
-        <div class="achievement-card">
-          <img src="${imgSrc}" draggable="false">
-          <h6>${ach.title}</h6>
-          <small>${new Date(ach.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</small>
-          <p class="small mt-2">${ach.description}</p>
-        </div>`;
+  <div class="achievement-card">
+    <img src="${imgSrc}" draggable="false">
+    <h6>${ach.title}</h6>
+    <small>${new Date(ach.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</small>
+    <p class="small mt-2">${ach.description}</p>
+  </div>
+`;
+
+slide.querySelector(".achievement-card").addEventListener("click", e => {
+  if (dragging) return; // prevent modal while dragging
+  openAchievementModal(ach);
+  history.pushState({ id: ach.id }, "", `?ach=${ach.id}`);
+});
+
+
       track.appendChild(slide);
     });
 
@@ -266,4 +284,65 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadAllAchievements("all-achievements");
   populateYearPills("achievement-year-pills");
   autoHorizontalSlider("latest-achievements-home", 3);
+});
+
+
+const modal = document.getElementById("achievement-modal");
+const modalImg = document.getElementById("modal-img");
+const modalTitle = document.getElementById("modal-title");
+const modalDate = document.getElementById("modal-date");
+const modalDesc = document.getElementById("modal-desc");
+
+function openAchievementModal(ach) {
+  modalImg.src = ach.image || "";
+  modalTitle.textContent = ach.title;
+  modalDate.textContent = new Date(ach.date).toLocaleDateString(
+    'en-GB', { day:'numeric', month:'long', year:'numeric' }
+  );
+  modalDesc.textContent = ach.description;
+
+  modal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function closeAchievementModal() {
+  modal.classList.add("hidden");
+  document.body.style.overflow = "";
+
+  // Remove the ?ach=… from URL without reloading
+  history.pushState({}, "", window.location.pathname);
+}
+
+
+modal.querySelector(".modal-close").onclick = closeAchievementModal;
+modal.querySelector(".achievement-modal-overlay").onclick = closeAchievementModal;
+
+window.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeAchievementModal();
+});
+
+function openModalFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const achId = params.get("ach");
+  if (!achId) return;
+
+  fetchAchievements().then(achievements => {
+    const ach = achievements.find(a => a.id === achId);
+    if (ach) openAchievementModal(ach);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", openModalFromURL);
+
+window.addEventListener("popstate", () => {
+  const params = new URLSearchParams(window.location.search);
+  const achId = params.get("ach");
+  if (!achId) {
+    closeAchievementModal();
+  } else {
+    fetchAchievements().then(achievements => {
+      const ach = achievements.find(a => a.id === achId);
+      if (ach) openAchievementModal(ach);
+    });
+  }
 });
