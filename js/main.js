@@ -52,27 +52,12 @@ window.addEventListener("scroll", () => {
 
 
 // ===============================
-// Parallax + Stats Counter
+// Stats Counter
 // ===============================
 (function() {
-  const parallax = document.querySelector('.parallax-bg');
   const statsSection = document.getElementById('stats');
   const counters = document.querySelectorAll('.stat-number');
-  const parallaxSpeed = 0.35;
   let countersStarted = false;
-
-  function updateParallax() {
-    if (!parallax) return;
-    const scrolled = window.pageYOffset;
-    const parent = parallax.parentElement;
-    const sectionTop = parent.offsetTop;
-    const sectionHeight = parent.offsetHeight;
-
-    if (scrolled + window.innerHeight > sectionTop && scrolled < sectionTop + sectionHeight) {
-      const yPos = (scrolled - sectionTop) * parallaxSpeed;
-      parallax.style.transform = `translate3d(0, ${yPos}px, 0)`;
-    }
-  }
 
   function startCounters() {
     if (countersStarted || counters.length === 0) return;
@@ -97,14 +82,12 @@ window.addEventListener("scroll", () => {
   }
 
   function onScroll() {
-    updateParallax();
     if (!statsSection) return;
     const rect = statsSection.getBoundingClientRect();
     if (rect.top < window.innerHeight - 100) startCounters();
   }
 
   window.addEventListener("scroll", onScroll);
-  window.addEventListener("resize", updateParallax);
 })();
 
 // ===============================
@@ -131,31 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("load", hideLoader);
 });
 
-
-
-// ===============================
-// Register Form Validation
-// ===============================
-const registerForm = document.getElementById("registerForm");
-if (registerForm) {
-  registerForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const password = document.getElementById("password").value;
-    const confirm = document.getElementById("confirmPassword").value;
-    const message = document.getElementById("registerMessage");
-    message.innerHTML = "";
-
-    if (password !== confirm) {
-      message.innerHTML = `<div class="alert alert-danger">Passwords do not match!</div>`;
-      return;
-    }
-
-    // Backend submission goes here later
-    message.innerHTML = `<div class="alert alert-success">Registered successfully!</div>`;
-    this.reset();
-  });
-}
-
 // ===============================
 // Terminal Folder Toggle
 // ===============================
@@ -168,22 +126,6 @@ document.querySelectorAll(".folder").forEach(folder => {
     details.classList.toggle("open");
   });
 });
-
-// ===============================
-// Parallax Images
-// ===============================
-const parallaxItems = document.querySelectorAll(".parallax");
-let latestScroll = 0;
-window.addEventListener("scroll", () => latestScroll = window.scrollY);
-
-function animateParallax() {
-  parallaxItems.forEach(item => {
-    const speed = parseFloat(item.dataset.speed) || 0;
-    item.style.transform = `translate(-50%, ${latestScroll * speed}px)`;
-  });
-  requestAnimationFrame(animateParallax);
-}
-animateParallax();
 
 // ===============================
 // Starfield Canvas
