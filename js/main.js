@@ -77,11 +77,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // ===============================
 // Page Loader
 // ===============================
+// Minimum loader display time (ms)
+const MIN_LOADER_TIME = 1800;
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Keep loader visible for 1.2s minimum
-  setTimeout(() => {
-    document.body.classList.add("loaded");
-  }, 1800); // 1200ms = 1.2 seconds
+  const loaderStart = Date.now();
+
+  // Wait for everything to be ready
+  const hideLoader = () => {
+    const elapsed = Date.now() - loaderStart;
+    const remaining = MIN_LOADER_TIME - elapsed;
+
+    // Ensure loader stays visible at least MIN_LOADER_TIME
+    setTimeout(() => {
+      document.body.classList.add("loaded");
+    }, remaining > 0 ? remaining : 0);
+  };
+
+  // If you want to wait for images too, use window.onload
+  window.addEventListener("load", hideLoader);
 });
 
 
