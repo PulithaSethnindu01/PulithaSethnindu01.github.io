@@ -103,59 +103,76 @@ small,
   width: 100%;
 }
 
-/* ===== LOADER ===== */
+/* ===============================
+   ULTRA MINIMAL AI LOADER WITH TEXT
+=============================== */
+
 #loader {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--bg-main);
+  inset: 0;
+  background: #050816;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
   z-index: 9999;
-  overflow: hidden;
-}
-
-.loader-content {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  color: white;
-  font-family: "Poppins", sans-serif;
-}
-
-.spinner-main {
-  border: 5px solid rgba(255, 255, 255, 0.2);
-  border-top: 5px solid #00f0ff;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  margin: 0 auto 20px auto;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.loader-content p {
-  font-size: 0.7rem;
-  letter-spacing: 1px;
+  transition: opacity .6s ease, visibility .8s ease;
 }
 
 body.loaded #loader {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
+
+/* Loader line */
+.ai-line-loader {
+  width: 160px;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  margin-bottom: 15px;
+}
+
+.ai-line-loader span {
+  position: absolute;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #6cf,
+    white,
+    #6cf,
+    transparent
+  );
+  animation: aiMove 1.2s ease-in-out infinite;
+  box-shadow: 0 0 12px #6cf;
+}
+
+@keyframes aiMove {
+  0% { left: -40%; opacity: 0; }
+  40% { opacity: 1; }
+  100% { left: 120%; opacity: 0; }
+}
+
+/* Subtle loader text */
+.loader-text {
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px;
+  animation: textPulse 1.5s infinite alternate;
+}
+
+/* Soft pulse for text */
+@keyframes textPulse {
+  from { opacity: 0.4; }
+  to { opacity: 0.8; }
+}
+
 
 /* ================= HERO SECTION ================= */
 .hero {

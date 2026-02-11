@@ -78,8 +78,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Page Loader
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("loaded");
+  // Keep loader visible for 1.2s minimum
+  setTimeout(() => {
+    document.body.classList.add("loaded");
+  }, 1800); // 1200ms = 1.2 seconds
 });
+
 
 
 // ===============================
@@ -140,7 +144,7 @@ animateParallax();
 const canvas = document.getElementById("starfield");
 const ctx = canvas?.getContext("2d");
 let stars = [];
-const STAR_COUNT = 300;
+const STAR_COUNT = window.innerWidth < 768 ? 120 : 300;
 
 function resizeCanvas() {
   if (!canvas) return;
