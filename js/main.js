@@ -1,13 +1,21 @@
 // ===============================
-// Smooth Scroll (Navbar Offset)
+// Smooth Scroll + Active Link + Mobile Auto-Collapse
 // ===============================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener("click", function(e) {
+
+// Select sections and navbar links
+const sections = document.querySelectorAll("section[id]");
+const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+const navbarCollapse = document.querySelector(".navbar-collapse");
+
+// Smooth scroll with offset
+navLinks.forEach(link => {
+  link.addEventListener("click", function(e) {
     const targetId = this.getAttribute("href");
     const target = document.querySelector(targetId);
     if (!target) return;
 
     e.preventDefault();
+
     const offset = document.querySelector(".navbar")?.offsetHeight || 70;
     const targetPos = target.getBoundingClientRect().top + window.pageYOffset - offset;
 
@@ -15,8 +23,33 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       top: targetPos,
       behavior: "smooth"
     });
+
+    // Auto-collapse on mobile
+    if (navbarCollapse.classList.contains("show")) {
+      new bootstrap.Collapse(navbarCollapse).hide();
+    }
   });
 });
+
+// Highlight active section on scroll
+window.addEventListener("scroll", () => {
+  let current = "";
+  const scrollPos = window.pageYOffset + window.innerHeight / 3; // detect 1/3 from top
+
+  sections.forEach(section => {
+    if (scrollPos >= section.offsetTop) {
+      current = section.getAttribute("id");
+    }
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove("active");
+    if (link.getAttribute("href").includes(current)) {
+      link.classList.add("active");
+    }
+  });
+});
+
 
 // ===============================
 // Parallax + Stats Counter
