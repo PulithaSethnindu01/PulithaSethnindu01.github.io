@@ -12,7 +12,7 @@
   <h1>Achievements Admin</h1>
 
   <!-- Login Section -->
-  <div id="login-section" class="card">
+  <div id="login-section" class="card login-card">
     <h2>Login</h2>
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
@@ -20,17 +20,19 @@
   </div>
 
   <!-- Form & Existing Achievements -->
-  <div id="form-section" style="display:none;">
+  <div id="form-section" class="admin-section" style="display:none;">
     
     <!-- Add New Achievement -->
     <div class="card">
       <h2>Add New Achievement</h2>
-      <input type="text" id="title" placeholder="Title">
-      <input type="date" id="date">
-      <textarea id="desc" placeholder="Description"></textarea>
-      <input type="file" id="image">
+      <div class="form-group">
+        <input type="text" id="title" placeholder="Title">
+        <input type="date" id="date">
+        <textarea id="desc" placeholder="Description"></textarea>
+        <input type="file" id="image">
+      </div>
       <button onclick="addAchievement()">Add Achievement</button>
-      <div id="progress" class="progress" style="display:none;">Uploading...</div>
+      <div id="progress" class="progress">Uploading...</div>
     </div>
 
     <!-- Existing Achievements -->
@@ -41,6 +43,8 @@
 
   </div>
 </div>
+
+<div id="toast-container"></div>
 
 <script src="admin.js"></script>
 </body>

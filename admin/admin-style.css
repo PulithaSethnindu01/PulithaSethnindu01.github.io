@@ -1,94 +1,226 @@
+/* ===== Base Styles ===== */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f6f8;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f3f7;
   margin: 0;
   padding: 0;
+  color: #333;
 }
 
 .container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 10px;
+  max-width: 950px;
+  margin: 40px auto;
+  padding: 15px;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-weight: 700;
+  color: #2c3e50;
 }
 
+/* ===== Card Styles ===== */
 .card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  margin-bottom: 25px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-input[type="text"], input[type="date"], textarea {
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.login-card {
+  max-width: 400px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+/* ===== Inputs ===== */
+input[type="text"], input[type="password"], input[type="date"], textarea, input[type="file"] {
   width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 10px;
   border: 1px solid #ccc;
-  box-sizing: border-box;
+  font-size: 15px;
+  transition: border 0.2s ease;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="date"]:focus, textarea:focus {
+  border-color: #4a90e2;
+  outline: none;
 }
 
 textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 70px;
 }
 
+/* ===== Buttons ===== */
 button {
+  display: inline-block;
   background-color: #4a90e2;
   color: white;
-  padding: 10px 18px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 10px;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 button:hover {
   background-color: #357ABD;
+  transform: translateY(-1px);
 }
 
+/* ===== Progress ===== */
 .progress {
-  margin-top: 10px;
-  font-weight: bold;
-  color: #333;
+  margin-top: 12px;
+  font-weight: 500;
+  color: #4a90e2;
+  display: none;
 }
 
+/* ===== Achievements List ===== */
 #achievements-container div {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 0;
+  gap: 12px;
+  padding: 12px 0;
   border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
 }
 
 #achievements-container img {
-  width: 80px;
-  height: 60px;
+  width: 90px;
+  height: 65px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 #achievements-container input[type="text"], 
 #achievements-container input[type="date"], 
 #achievements-container textarea {
-  width: 200px;
-  margin: 0;
-  padding: 6px;
+  padding: 6px 10px;
   font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+#achievements-container input[type="text"], #achievements-container input[type="date"] {
+  width: 180px;
 }
 
 #achievements-container textarea {
-  width: 300px;
+  width: 280px;
   min-height: 50px;
 }
 
 #achievements-container button {
-  padding: 6px 12px;
+  padding: 6px 14px;
   font-size: 14px;
+  margin-top: 4px;
+  border-radius: 8px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  #achievements-container div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #achievements-container input, #achievements-container textarea {
+    width: 100%;
+  }
+
+  #achievements-container img {
+    margin-bottom: 10px;
+  }
+}
+
+/* ================= TOAST SYSTEM ================= */
+
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toast {
+  position: relative;
+  overflow: hidden;
+  min-width: 260px;
+  max-width: 320px;
+  padding: 16px 18px 22px 18px;
+  border-radius: 14px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  opacity: 0;
+  transform: translateX(100%);
+  animation: slideIn 0.4s forwards;
+}
+
+/* Toast types */
+.toast.success { background: linear-gradient(135deg, #28a745, #218838); }
+.toast.error { background: linear-gradient(135deg, #dc3545, #b02a37); }
+.toast.info { background: linear-gradient(135deg, #4a90e2, #357ABD); }
+
+/* Progress bar */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: rgba(255,255,255,0.4);
+  animation: progress linear forwards;
+}
+
+/* Animations */
+@keyframes slideIn {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.toast.hide {
+  animation: slideOut 0.4s forwards;
+}
+
+@keyframes slideOut {
+  to { opacity: 0; transform: translateX(120%); }
+}
+
+@keyframes progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* Loading style (indeterminate animation) */
+.toast.loading {
+  background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.toast.loading .toast-progress {
+  width: 40%;
+  animation: loadingBar 1s linear infinite;
+  background: rgba(255,255,255,0.6);
+}
+
+@keyframes loadingBar {
+  0% { left: -40%; }
+  100% { left: 100%; }
 }

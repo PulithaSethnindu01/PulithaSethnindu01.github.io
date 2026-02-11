@@ -9,12 +9,12 @@ function login() {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
   if (user === ADMIN_USER && pass === ADMIN_PASS) {
-    alert("Login Successful!");
+    showToast("Login Successful!");
     document.getElementById("login-section").style.display = "none";
     document.getElementById("form-section").style.display = "block";
     loadAchievements();
   } else {
-    alert("Invalid username or password!");
+    showToast("Invalid username or password!");
   }
 }
 
@@ -46,15 +46,22 @@ async function addAchievement() {
   const file = fileInput.files[0];
 
   if (!title || !date || !desc || !file) {
-    alert("Fill all fields!");
-    return;
-  }
-  if (!file.type.startsWith("image/")) {
-    alert("Please select a valid image file!");
+    showToast("Fill all fields!", "error");
     return;
   }
 
-  document.getElementById("progress").style.display = "block";
+  if (!file.type.startsWith("image/")) {
+    showToast("Please select a valid image file!", "error");
+    return;
+  }
+
+  // 🔵 Show loading toast (persistent)
+  const loadingToast = showToast(
+    "Uploading achievement...",
+    "loading",
+    0,
+    true
+  );
 
   try {
     const compressedBlob = await compressImage(file);
@@ -63,8 +70,18 @@ async function addAchievement() {
     const cloudForm = new FormData();
     cloudForm.append("file", compressedBlob);
     cloudForm.append("upload_preset", UPLOAD_PRESET);
-    const cloudRes = await fetch(CLOUDINARY_URL, { method: "POST", body: cloudForm });
+
+    const cloudRes = await fetch(CLOUDINARY_URL, {
+      method: "POST",
+      body: cloudForm
+    });
+
     const cloudData = await cloudRes.json();
+
+    if (!cloudData.secure_url) {
+      throw new Error("Image upload failed");
+    }
+
     const imageUrl = cloudData.secure_url;
 
     // Send to backend
@@ -74,63 +91,67 @@ async function addAchievement() {
     sheetForm.append("description", desc);
     sheetForm.append("image", imageUrl);
 
-    const sheetRes = await fetch(WEB_APP_URL, { method: "POST", body: sheetForm });
+    const sheetRes = await fetch(WEB_APP_URL, {
+      method: "POST",
+      body: sheetForm
+    });
+
     const sheetJson = await sheetRes.json();
 
+    // 🔵 Remove loading toast
+    loadingToast.remove();
+
     if (sheetJson.status === "success") {
-  const newId = sheetJson.id; // unique achievement ID
-  alert("Achievement added successfully!");
+      const newId = sheetJson.id;
 
-  // Reset form fields
-  fileInput.value = "";
-  document.getElementById("title").value = "";
-  document.getElementById("date").value = "";
-  document.getElementById("desc").value = "";
+      showToast("Achievement added successfully!", "success");
 
-  // Load updated achievements
-  loadAchievements();
+      // Reset form fields
+      fileInput.value = "";
+      document.getElementById("title").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("desc").value = "";
 
-  // Remove previous copy link if exists
-  const oldCopyDiv = document.getElementById("copy-link-div");
-  if (oldCopyDiv) oldCopyDiv.remove();
+      loadAchievements();
 
-  // Create copy link section
-  const copyDiv = document.createElement("div");
-  copyDiv.id = "copy-link-div";
-  copyDiv.style.marginTop = "10px";
+      // Remove previous copy link
+      const oldCopyDiv = document.getElementById("copy-link-div");
+      if (oldCopyDiv) oldCopyDiv.remove();
 
-  const link = `${window.location.origin}/achievements.html?ach=${newId}`;
-  copyDiv.innerHTML = `
-    <input type="text" value="${link}" id="copy-link-input" readonly style="width:70%; padding:5px;">
-    <button id="copy-link-btn" style="padding:5px 10px; margin-left:5px;">Copy Link</button>
-  `;
+      // Create copy link
+      const copyDiv = document.createElement("div");
+      copyDiv.id = "copy-link-div";
+      copyDiv.style.marginTop = "10px";
 
-  // Insert below submit button
-  const submitBtn = document.querySelector("#form-section button");
-  submitBtn.insertAdjacentElement("afterend", copyDiv);
+      const link = `${window.location.origin}/achievements.html?ach=${newId}`;
+      copyDiv.innerHTML = `
+        <input type="text" value="${link}" id="copy-link-input" readonly style="width:70%; padding:5px;">
+        <button id="copy-link-btn" style="padding:5px 10px; margin-left:5px;">Copy Link</button>
+      `;
 
-  // Copy functionality
-  document.getElementById("copy-link-btn").onclick = () => {
-    const input = document.getElementById("copy-link-input");
-    input.select();
-    input.setSelectionRange(0, 99999); // for mobile
-    document.execCommand("copy");
-    alert("Link copied to clipboard!");
-  };
-}
- else {
-      alert("Error: " + sheetJson.message);
+      const submitBtn = document.querySelector("#form-section button");
+      submitBtn.insertAdjacentElement("afterend", copyDiv);
+
+      document.getElementById("copy-link-btn").onclick = () => {
+        const input = document.getElementById("copy-link-input");
+        input.select();
+        input.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        showToast("Link copied to clipboard!", "success");
+      };
+
+    } else {
+      showToast("Error: " + sheetJson.message, "error");
     }
 
   } catch (err) {
-    alert("Error: " + err.message);
+    loadingToast.remove();
+    showToast("Error: " + err.message, "error");
     console.error(err);
-  } finally {
-    document.getElementById("progress").style.display = "none";
   }
 }
 
-// Load all achievements
+
 // Load all achievements (updated with Delete button)
 async function loadAchievements() {
   const res = await fetch(WEB_APP_URL);
@@ -153,52 +174,117 @@ async function loadAchievements() {
   });
 }
 
-// Delete achievement
 async function deleteAchievement(id) {
-  if (!confirm("Are you sure you want to delete this achievement?")) return;
+
+  // 🔵 Show loading toast first
+  const loadingToast = showToast(
+    "Deleting achievement...",
+    "loading",
+    0,
+    true
+  );
 
   try {
-    // Send POST instead of DELETE
     const formData = new FormData();
     formData.append("id", id);
-    formData.append("action", "delete"); // signal delete
+    formData.append("action", "delete");
 
-    const res = await fetch(WEB_APP_URL, { method: "POST", body: formData });
+    const res = await fetch(WEB_APP_URL, {
+      method: "POST",
+      body: formData
+    });
+
     const json = await res.json();
 
+    // 🔵 Remove loading toast
+    loadingToast.remove();
+
     if (json.status === "success") {
-      alert("Achievement deleted!");
-      loadAchievements(); // refresh list
+      showToast("Achievement deleted!", "success");
+      loadAchievements();
     } else {
-      alert("Error: " + json.message);
+      showToast("Error: " + json.message, "error");
     }
+
   } catch (err) {
-    alert("Error: " + err.message);
+    loadingToast.remove();
+    showToast("Delete failed: " + err.message, "error");
+    console.error(err);
+  }
+}
+
+async function updateAchievement(id, imageUrl) {
+
+  const title = document.getElementById(`title-${id}`).value;
+  const date = document.getElementById(`date-${id}`).value;
+  const desc = document.getElementById(`desc-${id}`).value;
+
+  // 🔵 Show loading toast first
+  const loadingToast = showToast(
+    "Updating achievement...",
+    "loading",
+    0,
+    true
+  );
+
+  try {
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("title", title);
+    formData.append("date", date);
+    formData.append("description", desc);
+    formData.append("image", imageUrl);
+
+    const res = await fetch(WEB_APP_URL, {
+      method: "POST",
+      body: formData
+    });
+
+    const json = await res.json();
+
+    // 🔵 Remove loading toast
+    loadingToast.remove();
+
+    if (json.status === "success") {
+      showToast("Updated successfully!", "success");
+      loadAchievements();
+    } else {
+      showToast("Error: " + json.message, "error");
+    }
+
+  } catch (err) {
+    loadingToast.remove();
+    showToast("Update failed: " + err.message, "error");
     console.error(err);
   }
 }
 
 
-// Update achievement
-async function updateAchievement(id, imageUrl) {
-  const title = document.getElementById(`title-${id}`).value;
-  const date = document.getElementById(`date-${id}`).value;
-  const desc = document.getElementById(`desc-${id}`).value;
+function showToast(message, type = "info", duration = 3000, persist = false) {
+  const container = document.getElementById("toast-container");
 
-  const formData = new FormData();
-  formData.append("id", id); // critical!
-  formData.append("title", title);
-  formData.append("date", date);
-  formData.append("description", desc);
-  formData.append("image", imageUrl);
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerText = message;
 
-  const res = await fetch(WEB_APP_URL, { method: "POST", body: formData });
-  const json = await res.json();
+  const progress = document.createElement("div");
+  progress.className = "toast-progress";
 
-  if (json.status === "success") {
-    alert("Updated!");
-    loadAchievements();
+  if (type === "loading") {
+    toast.classList.add("loading");
   } else {
-    alert("Error: " + json.message);
+    progress.style.animationDuration = duration + "ms";
   }
+
+  toast.appendChild(progress);
+  container.appendChild(toast);
+
+  if (!persist && type !== "loading") {
+    setTimeout(() => {
+      toast.classList.add("hide");
+      setTimeout(() => toast.remove(), 400);
+    }, duration);
+  }
+
+  return toast; // IMPORTANT: return so we can close it manually
 }
