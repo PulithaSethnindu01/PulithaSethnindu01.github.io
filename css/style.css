@@ -343,26 +343,28 @@ body.loaded #loader {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  cursor: pointer; /* indicate click to reveal */
+  cursor: pointer;
 }
 
 /* ===== STARFIELD & MAIN LOGO ===== */
 #starfield,
 .hero-mainimg {
   position: absolute;
-  inset: 0;             /* top:0; right:0; bottom:0; left:0 */
+  inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 1;
   transition: opacity 1.5s ease, transform 1.5s ease;
 }
 
 .hero-mainimg {
-  width: 20%;
+  width: 25%;
   max-height: 50%;
   height: auto;
   margin: auto;
-  top: -10%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: url("../assets/aaa logo.png") center center / contain no-repeat;
 }
 
@@ -383,7 +385,7 @@ body.loaded #loader {
 
 /* ===== HERO TEXT ===== */
 .hero-title {
-  font-family: "LEMON MILK", sans-serif;
+  font-family: 'Lemon Milk', Arial, sans-serif;
   font-size: 45px;
   font-weight: 400;
   letter-spacing: 4px;
@@ -419,8 +421,7 @@ body.loaded #loader {
 .hero-buttons,
 .hero-img {
   opacity: 0;
-  visibility: hidden;
-  transform: translateY(12px);
+  transform: translateY(20px);
   transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
@@ -430,50 +431,45 @@ body.loaded #loader {
 .hero.revealed .hero-buttons,
 .hero.revealed .hero-img {
   opacity: 1;
-  visibility: visible;
   transform: translateY(0);
 }
 
 .hero.revealed .hero-mainimg {
   opacity: 0;
-  transform: scale(1.2);
-  pointer-events: none;
+  transform: scale(1.3);
 }
 
-/* ===== REVEAL HINT AT BOTTOM CENTER ===== */
+/* ===== REVEAL HINT ===== */
 .reveal-hint {
   position: absolute;
-  bottom: 60px;                 /* adjust distance from bottom */
-  left: 48%;                     /* horizontal center reference */
-  transform: translateX(-50%);   /* shift exactly to center */
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%); /* center exactly */
   font-size: 1rem;
   color: var(--text-muted);
   opacity: 0.7;
   pointer-events: none;
+  white-space: nowrap; /* keeps it on one line */
   text-align: center;
-  white-space: nowrap;
   animation: pulse 2s infinite;
-  z-index: 3;                    /* above stars/logo */
+  z-index: 3;
 }
 
 
-/* hide after reveal */
 .hero.revealed .reveal-hint {
   opacity: 0;
-  visibility: hidden;
   transition: opacity 0.8s ease;
 }
 
-/* optional: subtle pulsing */
 @keyframes pulse {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.8; }
 }
 
-
 /* ===== NAVBAR FADE ===== */
 .navbar {
   opacity: 0;
+  transition: opacity 1s ease;
 }
 
 body.hero-revealed .navbar {
@@ -494,30 +490,20 @@ body.hero-revealed .navbar {
   transition: color 0.3s ease;
 }
 
-#mute-btn i {
-  pointer-events: none; /* only button is clickable */
-}
-
 #mute-btn:hover {
   color: var(--accent);
 }
 
-/* Show hero content normally on non-reveal pages */
+/* ===== NON-REVEAL PAGES ===== */
 body:not(.hero-reveal-page) .hero-title,
 body:not(.hero-reveal-page) .hero-subtitle,
 body:not(.hero-reveal-page) .hero-buttons,
-body:not(.hero-reveal-page) .hero-img {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateY(0) !important;
-}
-
-/* Also show hero main image & starfield normally */
+body:not(.hero-reveal-page) .hero-img,
 body:not(.hero-reveal-page) .hero-mainimg,
 body:not(.hero-reveal-page) #starfield {
   opacity: 1 !important;
-  pointer-events: auto !important;
   transform: none !important;
+  pointer-events: auto !important;
 }
 
 
