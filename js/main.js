@@ -77,9 +77,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // ===============================
 // Page Loader
 // ===============================
-window.addEventListener("load", () => {
+document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("loaded");
 });
+
 
 // ===============================
 // Register Form Validation
