@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-  <h1>Achievements Admin</h1>
+  <h1>Astro Ananda Admin</h1>
 
   <!-- Login Section -->
   <div id="login-section" class="card login-card">
@@ -19,9 +19,15 @@
     <button onclick="login()">Login</button>
   </div>
 
-  <!-- Form & Existing Achievements -->
-  <div id="form-section" class="admin-section" style="display:none;">
-    
+  <!-- Dashboard Tabs -->
+<div id="dashboard-tabs" style="display:none;">
+  <div class="tabs" style="display:flex; gap:10px; margin-bottom:20px;">
+    <button id="ach-tab" class="tab active">Achievements</button>
+    <button id="board-tab" class="tab">Board</button>
+  </div>
+
+  <!-- Achievements Content -->
+  <div id="achievements-tab">
     <!-- Add New Achievement -->
     <div class="card">
       <h2>Add New Achievement</h2>
@@ -40,9 +46,50 @@
       <h2>Existing Achievements</h2>
       <div id="achievements-container"></div>
     </div>
+  </div>
 
+  <!-- Board Content -->
+  <div id="board-tab-content" style="display:none;">
+    <div class="card">
+      <h2>Board Members</h2>
+      
+      <h3>Add / Edit Member</h3>
+      <form id="board-form" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <input type="hidden" id="index" />
+        <input type="text" id="name" placeholder="Name" style="padding:6px; flex:1;" required />
+        <select id="role" style="padding:6px; flex:1;">
+          <option>President</option>
+          <option>Vice President</option>
+          <option>Joint Secretary</option>
+          <option>Treasurer</option>
+          <option>Chief Organizer</option>
+          <option>Assistant Secretary</option>
+          <option>Assistant Treasurer</option>
+          <option>Chief Coordinator</option>
+          <option>Editor</option>
+          <option>Organizer</option>
+          <option>Committee Member</option>
+        </select>
+        <button type="submit" style="padding:6px 12px; background:#ff6f61; border:none; color:#fff; border-radius:4px; cursor:pointer;">Save</button>
+        <button type="button" id="reset-form" style="padding:6px 12px; background:#555; border:none; color:#fff; border-radius:4px; cursor:pointer;">Reset</button>
+      </form>
+
+      <table id="board-table" style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+        <thead>
+          <tr style="border-bottom: 1px solid #444;">
+            <th style="text-align:left; padding:8px;">Name</th>
+            <th style="text-align:left; padding:8px;">Role</th>
+            <th style="text-align:left; padding:8px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Members will be inserted here by JS -->
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+
 
 <div id="toast-container"></div>
 

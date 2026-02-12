@@ -288,61 +288,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 const modal = document.getElementById("achievement-modal");
-const modalImg = document.getElementById("modal-img");
-const modalTitle = document.getElementById("modal-title");
-const modalDate = document.getElementById("modal-date");
-const modalDesc = document.getElementById("modal-desc");
+if (modal) {
+  const modalImg = document.getElementById("modal-img");
+  const modalTitle = document.getElementById("modal-title");
+  const modalDate = document.getElementById("modal-date");
+  const modalDesc = document.getElementById("modal-desc");
 
-function openAchievementModal(ach) {
-  modalImg.src = ach.image || "";
-  modalTitle.textContent = ach.title;
-  modalDate.textContent = new Date(ach.date).toLocaleDateString(
-    'en-GB', { day:'numeric', month:'long', year:'numeric' }
-  );
-  modalDesc.textContent = ach.description;
+  function openAchievementModal(ach) {
+    if (!modalImg || !modalTitle || !modalDate || !modalDesc) return;
 
-  modal.classList.remove("hidden");
-  document.body.style.overflow = "hidden";
-}
+    modalImg.src = ach.image || "";
+    modalTitle.textContent = ach.title;
+    modalDate.textContent = new Date(ach.date).toLocaleDateString(
+      'en-GB', { day:'numeric', month:'long', year:'numeric' }
+    );
+    modalDesc.textContent = ach.description;
 
-function closeAchievementModal() {
-  modal.classList.add("hidden");
-  document.body.style.overflow = "";
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
 
-  // Remove the ?ach=… from URL without reloading
-  history.pushState({}, "", window.location.pathname);
-}
+  function closeAchievementModal() {
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
 
+    // Remove the ?ach=… from URL without reloading
+    history.pushState({}, "", window.location.pathname);
+  }
 
-modal.querySelector(".modal-close").onclick = closeAchievementModal;
-modal.querySelector(".achievement-modal-overlay").onclick = closeAchievementModal;
+  const closeBtn = modal.querySelector(".modal-close");
+  const overlay = modal.querySelector(".achievement-modal-overlay");
+  if (closeBtn) closeBtn.onclick = closeAchievementModal;
+  if (overlay) overlay.onclick = closeAchievementModal;
 
-window.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeAchievementModal();
-});
-
-function openModalFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  const achId = params.get("ach");
-  if (!achId) return;
-
-  fetchAchievements().then(achievements => {
-    const ach = achievements.find(a => a.id === achId);
-    if (ach) openAchievementModal(ach);
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeAchievementModal();
   });
 }
-
-document.addEventListener("DOMContentLoaded", openModalFromURL);
-
-window.addEventListener("popstate", () => {
-  const params = new URLSearchParams(window.location.search);
-  const achId = params.get("ach");
-  if (!achId) {
-    closeAchievementModal();
-  } else {
-    fetchAchievements().then(achievements => {
-      const ach = achievements.find(a => a.id === achId);
-      if (ach) openAchievementModal(ach);
-    });
-  }
-});

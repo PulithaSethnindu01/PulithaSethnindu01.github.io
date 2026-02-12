@@ -685,8 +685,13 @@ body:not(.hero-reveal-page) #starfield {
   }
 }
 
+.board-loading {
+  color: var(--text-muted);
+  font-style: italic;
+}
 
-/* ===== ACHIEVEMENTS ===== */
+
+
 /* ===== ACHIEVEMENTS ===== */
 .achievements-slider {
   width: 100%;

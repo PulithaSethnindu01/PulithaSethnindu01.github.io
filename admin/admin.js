@@ -11,12 +11,18 @@ function login() {
   if (user === ADMIN_USER && pass === ADMIN_PASS) {
     showToast("Login Successful!");
     document.getElementById("login-section").style.display = "none";
-    document.getElementById("form-section").style.display = "block";
+    
+    // Show dashboard tabs
+    showDashboardTabs();
+
+    // Load achievements and board
     loadAchievements();
+    fetchBoard();
   } else {
     showToast("Invalid username or password!");
   }
 }
+
 
 // Image compression
 function compressImage(file, maxWidth = 800, quality = 0.7) {
@@ -287,4 +293,159 @@ function showToast(message, type = "info", duration = 3000, persist = false) {
   }
 
   return toast; // IMPORTANT: return so we can close it manually
+}
+
+
+const BOARD_URL = "https://script.google.com/macros/s/AKfycbzSzqMD6cu7acrXcixm6fPjNeoREjtrZqzrhXPgCG9EdGcZdf2cf6lHWBgNmqTRieFb2g/exec";
+
+let boardData = []; // cached board members
+
+// Fetch existing board members
+async function fetchBoard() {
+  const tbody = document.querySelector("#board-table tbody");
+  tbody.innerHTML = `<tr><td colspan="3">Loading board members…</td></tr>`;
+
+  try {
+    const res = await fetch(BOARD_URL);
+    boardData = await res.json();
+
+    if (!boardData.length) {
+      tbody.innerHTML = `<tr><td colspan="3">No members yet.</td></tr>`;
+      return;
+    }
+
+    renderAdminList();
+  } catch (err) {
+    console.error("Failed to fetch board:", err);
+    tbody.innerHTML = `<tr><td colspan="3">Error loading board members.</td></tr>`;
+  }
+}
+
+// Render admin list into table
+function renderAdminList() {
+  const tbody = document.querySelector("#board-table tbody");
+  tbody.innerHTML = "";
+
+  boardData.forEach((member, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${member.name}</td>
+      <td>${member.role}</td>
+      <td>
+        <button onclick="editMember(${index})">Edit</button>
+        <button onclick="deleteMember(${index})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Populate form to edit
+function editMember(index) {
+  const member = boardData[index];
+  document.getElementById("index").value = index;
+  document.getElementById("name").value = member.name;
+  document.getElementById("role").value = member.role;
+}
+
+// Delete member
+async function deleteMember(index) {
+  // 🔵 Show loading toast
+  const loadingToast = showToast("Deleting member...", "loading", 0, true);
+
+  try {
+    await fetch(BOARD_URL + `?action=delete&index=${index}`, { method: "POST" });
+    boardData.splice(index, 1); // remove locally
+    renderAdminList();
+
+    loadingToast.remove();
+    showToast("Member deleted!", "success");
+  } catch (err) {
+    loadingToast.remove();
+    console.error("Delete failed:", err);
+    showToast("Delete failed: " + err.message, "error");
+  }
+}
+
+
+// Add / Edit member
+document.getElementById("board-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const index = document.getElementById("index").value;
+  const name = document.getElementById("name").value;
+  const role = document.getElementById("role").value;
+
+  const action = index !== "" ? "edit" : "add";
+  const params = new URLSearchParams({ action, name, role });
+  if (index !== "") params.append("index", index);
+
+  // 🔵 Show loading toast
+  const loadingToast = showToast(
+    action === "add" ? "Adding member..." : "Updating member...",
+    "loading",
+    0,
+    true
+  );
+
+  try {
+    await fetch(BOARD_URL + "?" + params.toString(), { method: "POST" });
+
+    if (action === "add") {
+      boardData.push({ name, role });
+      showToast("Member added!", "success");
+    } else {
+      boardData[index] = { name, role };
+      showToast("Member updated!", "success");
+    }
+
+    renderAdminList();
+    document.getElementById("board-form").reset();
+    document.getElementById("index").value = "";
+
+    loadingToast.remove();
+  } catch (err) {
+    loadingToast.remove();
+    console.error("Save failed:", err);
+    showToast("Save failed: " + err.message, "error");
+  }
+});
+
+
+// Reset button clears form
+document.getElementById("reset-form").addEventListener("click", () => {
+  document.getElementById("board-form").reset();
+  document.getElementById("index").value = "";
+});
+
+// Initial load
+fetchBoard();
+
+
+// Show tabs after login
+function showDashboardTabs() {
+  const dashboard = document.getElementById("dashboard-tabs");
+  dashboard.style.display = "block";
+
+  const achBtn = document.getElementById("ach-tab");
+  const boardBtn = document.getElementById("board-tab");
+  const achContent = document.getElementById("achievements-tab");
+  const boardContent = document.getElementById("board-tab-content");
+
+  achBtn.addEventListener("click", () => {
+    achContent.style.display = "block";
+    boardContent.style.display = "none";
+    achBtn.classList.add("active");
+    boardBtn.classList.remove("active");
+    showToast("Switched to Achievements Edit", "info", 2000);
+  });
+
+  boardBtn.addEventListener("click", () => {
+  achContent.style.display = "none";
+  boardContent.style.display = "block";
+  achBtn.classList.remove("active");
+  boardBtn.classList.add("active");
+
+  showToast("Switched to Board Edit", "info", 2000);
+});
 }

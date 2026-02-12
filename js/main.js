@@ -11,8 +11,10 @@ const navbarCollapse = document.querySelector(".navbar-collapse");
 navLinks.forEach(link => {
   link.addEventListener("click", function(e) {
     const targetId = this.getAttribute("href");
+    if (!targetId || !targetId.startsWith("#")) return; // ❌ prevent null or external links
+
     const target = document.querySelector(targetId);
-    if (!target) return;
+    if (!target) return; // ❌ prevent crash if target not found
 
     e.preventDefault();
 
@@ -25,11 +27,12 @@ navLinks.forEach(link => {
     });
 
     // Auto-collapse on mobile
-    if (navbarCollapse.classList.contains("show")) {
+    if (navbarCollapse && navbarCollapse.classList.contains("show")) {
       new bootstrap.Collapse(navbarCollapse).hide();
     }
   });
 });
+
 
 // Highlight active section on scroll
 window.addEventListener("scroll", () => {
@@ -44,7 +47,12 @@ window.addEventListener("scroll", () => {
 
   navLinks.forEach(link => {
     link.classList.remove("active");
-    if (link.getAttribute("href").includes(current)) {
+
+    const href = link.getAttribute("href");
+    if (!href || !current) return;  // ✅ skip nulls
+
+    // Only activate hash links that exactly match current section
+    if (href.startsWith("#") && href === `#${current}`) {
       link.classList.add("active");
     }
   });
@@ -94,7 +102,7 @@ window.addEventListener("scroll", () => {
 // Page Loader
 // ===============================
 // Minimum loader display time (ms)
-const MIN_LOADER_TIME = 1800;
+const MIN_LOADER_TIME = 1650;
 
 document.addEventListener("DOMContentLoaded", () => {
   const loaderStart = Date.now();
@@ -294,3 +302,121 @@ const observer = new IntersectionObserver((entries, obs) => {
 }, { threshold: 0.15 });
 
 animatedItems.forEach(el => observer.observe(el));
+
+const BOARD_URL = "https://script.google.com/macros/s/AKfycbzSzqMD6cu7acrXcixm6fPjNeoREjtrZqzrhXPgCG9EdGcZdf2cf6lHWBgNmqTRieFb2g/exec"; // must be the Web App URL
+
+async function fetchBoardData() {
+  try {
+    const res = await fetch(BOARD_URL);
+    const boardData = await res.json();
+    renderBoard(boardData);
+  } catch (err) {
+    console.error("Error fetching board:", err);
+  }
+}
+
+// Map roles to rows
+const ROLE_ROW_MAP = {
+  "President": "top",
+  "Joint Secretary": "mid",
+  "Treasurer": "mid",
+  "Chief Organizer": "mid",
+  "Vice President": "bottom",
+  "Assistant Secretary": "bottom",
+  "Assistant Treasurer": "bottom",
+  "Chief Coordinator": "bottom",
+  "Editor": "bottom",
+  "Organizer": "bottom",
+  "Committee Member": "bottom"
+};
+
+// Define hierarchy order (left to right)
+const HIERARCHY_ORDER = [
+  "President",
+  "Joint Secretary",
+  "Treasurer",
+  "Chief Organizer",
+  "Vice President",
+  "Assistant Secretary",
+  "Assistant Treasurer",
+  "Chief Coordinator",
+  "Editor",
+  "Organizer",
+  "Committee Member"
+];
+
+function renderBoard(board) {
+  const container = document.querySelector(".board-container");
+  if (!container) return;
+
+  // Clear previous content / loading
+  container.innerHTML = "";
+
+  // Group members by row
+  const rows = { top: [], mid: [], bottom: [] };
+  board.forEach(member => {
+    const row = ROLE_ROW_MAP[member.role] || "bottom";
+    rows[row].push(member);
+  });
+
+  // Sort each row by hierarchy
+  Object.keys(rows).forEach(rowName => {
+    rows[rowName].sort((a, b) => {
+      return HIERARCHY_ORDER.indexOf(a.role) - HIERARCHY_ORDER.indexOf(b.role);
+    });
+  });
+
+  // Create rows dynamically
+  ["top", "mid", "bottom"].forEach(rowName => {
+    const members = rows[rowName];
+    if (!members.length) return;
+
+    const rowDiv = document.createElement("div");
+    rowDiv.className = `board-row ${rowName}-row`;
+    rowDiv.style.display = "flex";
+    rowDiv.style.justifyContent = "center"; // all rows centered
+    rowDiv.style.flexWrap = "wrap";
+    rowDiv.style.gap = "30px";
+
+    members.forEach(member => {
+      const memberDiv = document.createElement("div");
+      memberDiv.className = "board-member animate-on-scroll";
+      memberDiv.setAttribute("data-anim", "animate__zoomIn");
+      memberDiv.style.opacity = 0; // animate in
+
+      memberDiv.innerHTML = `
+        <p class="board-role">${member.role}</p>
+        <p class="board-name">${member.name}</p>
+      `;
+
+      rowDiv.appendChild(memberDiv);
+
+      // Observe for animation
+      observer.observe(memberDiv);
+    });
+
+    container.appendChild(rowDiv);
+  });
+}
+
+// Fetch + render
+async function fetchBoardData() {
+  const container = document.querySelector(".board-container");
+  container.innerHTML = `<p class="board-loading">Loading board members…</p>`;
+
+  try {
+    const res = await fetch(BOARD_URL);
+    const boardData = await res.json();
+
+    // Optional: sort members alphabetically within row
+    boardData.sort((a, b) => a.name.localeCompare(b.name));
+
+    renderBoard(boardData);
+  } catch (err) {
+    console.error("Error fetching board:", err);
+    container.innerHTML = `<p class="board-loading">Failed to load board.</p>`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", fetchBoardData);
+

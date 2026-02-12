@@ -224,3 +224,16 @@ button:hover {
   0% { left: -40%; }
   100% { left: 100%; }
 }
+
+.tabs button {
+  padding: 8px 16px;
+  border: none;
+  background: #444;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background: #ff6f61;
+}
