@@ -401,22 +401,32 @@ function renderBoard(board) {
 
 // Fetch + render
 async function fetchBoardData() {
+
   const container = document.querySelector(".board-container");
-  container.innerHTML = `<p class="board-loading">Loading board members…</p>`;
+
+  // 🔒 Stop if board section does not exist
+  if (!container) return;
+
+  container.innerHTML = `<p class="board-loading">Loading…</p>`;
 
   try {
     const res = await fetch(BOARD_URL);
     const boardData = await res.json();
 
-    // Optional: sort members alphabetically within row
+    // Optional: sort members alphabetically
     boardData.sort((a, b) => a.name.localeCompare(b.name));
 
     renderBoard(boardData);
+
   } catch (err) {
     console.error("Error fetching board:", err);
     container.innerHTML = `<p class="board-loading">Failed to load board.</p>`;
   }
 }
 
-document.addEventListener("DOMContentLoaded", fetchBoardData);
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.querySelector(".board-container")) {
+    fetchBoardData();
+  }
+});
 

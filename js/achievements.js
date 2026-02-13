@@ -4,50 +4,73 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxDvIXhBFEMzj2WVX0p
 // ===== FETCH ACHIEVEMENTS =====
 async function fetchAchievements() {
   try {
-    const res = await fetch(WEB_APP_URL);
+    const res = await fetch(WEB_APP_URL, { cache: "no-store" });
+
+    if (!res.ok) throw new Error("Network response failed");
+
     const data = await res.json();
-    if (!Array.isArray(data)) throw new Error("Data is not an array.");
+
+    if (!Array.isArray(data)) {
+      console.error("Invalid data:", data);
+      return [];
+    }
+
     return data;
+
   } catch (err) {
     console.error("Failed to fetch achievements:", err);
     return [];
   }
 }
 
+
 // ===== GRID =====
-async function loadAllAchievements(containerId) {
+function loadAllAchievements(containerId, achievements) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  container.innerHTML = "";
+  
 
-  const achievements = await fetchAchievements();
-  const sorted = achievements.sort((a, b) => new Date(b.date) - new Date(a.date));
+// Inside loadAllAchievements()
+const loadingText = document.querySelector("#all-achievements-section .achievements-loading");
+if (loadingText) loadingText.remove();
+
+
+  const sorted = [...achievements].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
 
   sorted.forEach(ach => {
-    const imgSrc = ach.image || "https://via.placeholder.com/300x200?text=No+Image";
-    const year = new Date(ach.date).getFullYear();
+    const imgSrc = ach.image || "https://placehold.co/300x200?text=No+Image";
+    const year = ach.date ? new Date(ach.date).getFullYear() : "Unknown";
 
     const col = document.createElement("div");
     col.className = "col-md-4 mb-4 achievement-col";
     col.dataset.year = year;
-    const link = ach.link || "#";
-col.innerHTML = `
-  <div class="achievement-card">
-    <img data-src="${imgSrc}" src="https://via.placeholder.com/300x200?text=Loading..." loading="lazy" draggable="false">
-    <h5>${ach.title}</h5>
-    <small>${new Date(ach.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</small>
-    <p>${ach.description}</p>
-  </div>
-`;
 
-col.querySelector(".achievement-card").addEventListener("click", () => {
-  openAchievementModal(ach);
-  // Update URL without reloading
-  history.pushState({ id: ach.id }, "", `?ach=${ach.id}`);
-});
+    col.innerHTML = `
+      <div class="achievement-card">
+        <img data-src="${imgSrc}"
+             src="https://placehold.co/300x200?text=Loading"
+             loading="lazy"
+             draggable="false">
+        <h5>${ach.title}</h5>
+        <small>${ach.date ? new Date(ach.date).toLocaleDateString('en-GB', {
+          day:'numeric', month:'short', year:'numeric'
+        }) : "Unknown Date"}</small>
+        <p>${ach.description}</p>
+      </div>
+    `;
+
+    col.querySelector(".achievement-card").addEventListener("click", () => {
+      openAchievementModal(ach);
+      history.pushState({ id: ach.id }, "", `?ach=${ach.id}`);
+    });
 
     container.appendChild(col);
   });
+
+  // Remove loading text after rendering
+  if (loadingText) loadingText.remove();
 
   const lazyImages = container.querySelectorAll("img[data-src]");
   const observer = new IntersectionObserver((entries, obs) => {
@@ -72,12 +95,17 @@ function filterAchievementsByYear(year) {
 }
 
 // ===== YEAR PILLS =====
-async function populateYearPills(containerId) {
+function populateYearPills(containerId, achievements) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const achievements = await fetchAchievements();
-  const years = [...new Set(achievements.map(a => new Date(a.date).getFullYear()))].sort((a, b) => b - a);
+  container.innerHTML = ""; // 🔥 prevent duplicates
+
+  if (!achievements || !achievements.length) return;
+
+  const years = [...new Set(
+    achievements.map(a => new Date(a.date).getFullYear())
+  )].sort((a, b) => b - a);
 
   const allPill = document.createElement("button");
   allPill.className = "year-pill active";
@@ -103,18 +131,26 @@ async function populateYearPills(containerId) {
 }
 
 // ===== RESPONSIVE SLIDER (FINAL FIX) =====
-async function autoHorizontalSlider(containerId) {
+async function autoHorizontalSlider(containerId, achievements) {
+
   const track = document.getElementById(containerId);
   if (!track) return;
 
   const slider = track.parentElement;
+
+  // Remove loading text safely
+  const loadingText = slider.querySelector(".achievements-loading");
+  if (loadingText) loadingText.remove();
+
   track.className = "achievements-track";
   track.innerHTML = "";
 
-  const achievements = await fetchAchievements();
-  if (!achievements.length) return;
+  if (!achievements || !achievements.length) return;
 
-  const sorted = achievements.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sorted = [...achievements].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
+
   const latest = sorted.slice(0, 5);
 
   function getVisible() {
@@ -143,10 +179,14 @@ latest.forEach((_, i) => {
 
 function updateDots() {
   if (!dotsContainer) return;
+
+  const activeIndex = index >= latest.length ? 0 : index;
+
   dotsContainer.querySelectorAll(".achievement-dot").forEach((d, i) => {
-    d.classList.toggle("active", i === index % latest.length);
+    d.classList.toggle("active", i === activeIndex);
   });
 }
+
 
 
   // Build slides (clone for loop)
@@ -188,7 +228,7 @@ slide.querySelector(".achievement-card").addEventListener("click", e => {
   function resizeSlides() {
     const slideWidth = slider.offsetWidth / visible;
 
-    document.querySelectorAll(".achievement-slide").forEach(s => {
+    track.querySelectorAll(".achievement-slide").forEach(s => {
       s.style.minWidth = slideWidth + "px";
     });
   }
@@ -281,10 +321,13 @@ slider.addEventListener("touchend", dragEnd);
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", async () => {
-  await loadAllAchievements("all-achievements");
-  populateYearPills("achievement-year-pills");
-  autoHorizontalSlider("latest-achievements-home", 3);
+  const achievements = await fetchAchievements();
+
+  await loadAllAchievements("all-achievements", achievements);
+  populateYearPills("achievement-year-pills", achievements);
+  autoHorizontalSlider("latest-achievements-home", achievements);
 });
+
 
 
 const modal = document.getElementById("achievement-modal");
