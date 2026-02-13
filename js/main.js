@@ -407,7 +407,7 @@ async function fetchBoardData() {
   // 🔒 Stop if board section does not exist
   if (!container) return;
 
-  container.innerHTML = `<p class="board-loading">Loading…</p>`;
+  container.innerHTML = `<p class="section-loading">Loading…</p>`;
 
   try {
     const res = await fetch(BOARD_URL);
@@ -420,7 +420,7 @@ async function fetchBoardData() {
 
   } catch (err) {
     console.error("Error fetching board:", err);
-    container.innerHTML = `<p class="board-loading">Failed to load board.</p>`;
+    container.innerHTML = `<p class="text-muted" style="font-style:italic;">Failed to load board</p>`;
   }
 }
 

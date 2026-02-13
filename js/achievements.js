@@ -31,7 +31,7 @@ function loadAllAchievements(containerId, achievements) {
   
 
 // Inside loadAllAchievements()
-const loadingText = document.querySelector("#all-achievements-section .achievements-loading");
+const loadingText = document.querySelector("#all-achievements-section .section-loading");
 if (loadingText) loadingText.remove();
 
 
@@ -139,7 +139,7 @@ async function autoHorizontalSlider(containerId, achievements) {
   const slider = track.parentElement;
 
   // Remove loading text safely
-  const loadingText = slider.querySelector(".achievements-loading");
+  const loadingText = slider.querySelector(".section-loading");
   if (loadingText) loadingText.remove();
 
   track.className = "achievements-track";

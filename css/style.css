@@ -524,6 +524,25 @@ body:not(.hero-reveal-page) #starfield {
   margin-top: 40px;
 }
 
+.section-loading {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+}
+
+.section-loading::after {
+  content: "…";
+  display: inline-block;
+  animation: dots 1s steps(3, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: ""; }
+  40%     { content: "."; }
+  60%     { content: ".."; }
+  80%,100%{ content: "..."; }
+}
+
 /* ===== FOOTER ===== */
 .footer {
   background: var(--bg-main);
@@ -699,13 +718,6 @@ body:not(.hero-reveal-page) #starfield {
 
 .board-member:hover .board-name::after {
   width: 40%;
-}
-
-/* Loading */
-.board-loading {
-  color: var(--text-muted);
-  font-style: italic;
-  text-align: center;
 }
 
 
@@ -899,25 +911,6 @@ body:not(.hero-reveal-page) #starfield {
   color: var(--text-main);
   font-size: 28px;
   cursor: pointer;
-}
-
-.achievements-loading {
-  color: var(--text-muted);
-  font-style: italic;
-  text-align: center;
-}
-
-.achievements-loading::after {
-  content: "…";
-  display: inline-block;
-  animation: dots 1s steps(3, end) infinite;
-}
-
-@keyframes dots {
-  0%, 20% { content: ""; }
-  40%     { content: "."; }
-  60%     { content: ".."; }
-  80%,100%{ content: "..."; }
 }
 
 
