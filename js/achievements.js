@@ -69,9 +69,6 @@ if (loadingText) loadingText.remove();
     container.appendChild(col);
   });
 
-  // Remove loading text after rendering
-  if (loadingText) loadingText.remove();
-
   const lazyImages = container.querySelectorAll("img[data-src]");
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {

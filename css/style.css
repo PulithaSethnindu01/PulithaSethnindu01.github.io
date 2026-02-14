@@ -985,7 +985,7 @@ body:not(.hero-reveal-page) #starfield {
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid rgba(29, 205, 159, 0.15);
+  border-bottom: 1px solid rgba(205, 70, 29, 0.15);
 }
 
 .terminal-header span {
