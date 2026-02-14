@@ -973,7 +973,20 @@ body:not(.hero-reveal-page) #starfield {
 
 .modal-actions i {
   font-size: 18px;
+  color: var(--accent);
 }
+
+#share-post-btn {
+  display: none; /* hide by default */
+}
+
+/* Show only on phones (max-width: 576px) */
+@media (max-width: 576px) {
+  #share-post-btn {
+    display: inline-flex; /* match other buttons */
+  }
+}
+
 
 .icon-wrapper {
   position: relative;

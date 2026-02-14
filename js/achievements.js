@@ -519,3 +519,29 @@ if (copyBtn) {
   // 🔥 expose function globally so cards can call it
   window.openAchievementModal = openAchievementModal;
 }
+
+const sharePostBtn = document.getElementById("share-post-btn");
+
+if (sharePostBtn) {
+  sharePostBtn.onclick = async () => {
+    if (!currentAchievement) return;
+
+    const textToShare = `${currentAchievement.title}\n\n${currentAchievement.description}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: currentAchievement.title,
+          text: textToShare,
+        });
+      } catch (err) {
+        console.log("Share cancelled");
+      }
+    } else {
+      // Fallback for browsers without Web Share API
+      navigator.clipboard.writeText(textToShare).then(() => {
+        alert("Post copied to clipboard!");
+      });
+    }
+  };
+}
