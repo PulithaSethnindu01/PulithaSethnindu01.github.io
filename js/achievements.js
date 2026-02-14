@@ -529,32 +529,34 @@ if (sharePostBtn) {
     const imageUrl = currentAchievement.image || "";
     const caption = currentAchievement.description || "";
 
-    // Modern mobile sharing with files
-    if (navigator.canShare && navigator.canShare({ files: [] })) {
-      try {
-        const res = await fetch(imageUrl);
-        const blob = await res.blob();
-        const file = new File([blob], "achievement.jpg", { type: blob.type });
+    try {
+      // Fetch the image
+      const res = await fetch(imageUrl, { mode: "cors" }); // cors mode
+      const blob = await res.blob();
+      const file = new File([blob], "achievement.jpg", { type: blob.type });
 
+      // Only try to share if navigator.canShare with files
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
           title: currentAchievement.title,
           text: caption
         });
-
-      } catch (err) {
-        console.error("Share failed:", err);
-        alert("Unable to share post.");
+      } else {
+        // Fallback: copy caption + image URL
+        const fallbackText = `${caption}\n\n${imageUrl}`;
+        await navigator.clipboard.writeText(fallbackText);
+        alert("Caption and image link copied! You can now paste it in your app.");
       }
 
-    } else {
-      // Fallback: copy caption + image link to clipboard
+    } catch (err) {
+      console.error("Share failed:", err);
+
+      // Fallback if fetch/share fails
       const fallbackText = `${caption}\n\n${imageUrl}`;
-      navigator.clipboard.writeText(fallbackText).then(() => {
-        alert("Caption and image link copied! You can now paste it in your app.");
-      }).catch(() => {
-        alert("Unable to copy. Please copy manually.");
-      });
+      navigator.clipboard.writeText(fallbackText)
+        .then(() => alert("Caption and image link copied!"))
+        .catch(() => alert("Unable to share or copy."));
     }
   };
 }
