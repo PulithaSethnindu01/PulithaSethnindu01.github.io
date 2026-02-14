@@ -526,21 +526,34 @@ if (sharePostBtn) {
   sharePostBtn.onclick = async () => {
     if (!currentAchievement) return;
 
-    const textToShare = `${currentAchievement.title}\n\n${currentAchievement.description}`;
+    const imageUrl = currentAchievement.image || "";
+    const caption = currentAchievement.description || "";
 
-    if (navigator.share) {
+    // Modern mobile sharing with files
+    if (navigator.canShare && navigator.canShare({ files: [] })) {
       try {
+        const res = await fetch(imageUrl);
+        const blob = await res.blob();
+        const file = new File([blob], "achievement.jpg", { type: blob.type });
+
         await navigator.share({
+          files: [file],
           title: currentAchievement.title,
-          text: textToShare,
+          text: caption
         });
+
       } catch (err) {
-        console.log("Share cancelled");
+        console.error("Share failed:", err);
+        alert("Unable to share post.");
       }
+
     } else {
-      // Fallback for browsers without Web Share API
-      navigator.clipboard.writeText(textToShare).then(() => {
-        alert("Post copied to clipboard!");
+      // Fallback: copy caption + image link to clipboard
+      const fallbackText = `${caption}\n\n${imageUrl}`;
+      navigator.clipboard.writeText(fallbackText).then(() => {
+        alert("Caption and image link copied! You can now paste it in your app.");
+      }).catch(() => {
+        alert("Unable to copy. Please copy manually.");
       });
     }
   };
