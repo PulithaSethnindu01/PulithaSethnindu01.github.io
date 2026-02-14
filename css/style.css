@@ -944,6 +944,114 @@ body:not(.hero-reveal-page) #starfield {
   to { opacity: 1; }
 }
 
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.modal-actions button {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px);
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .25s;
+}
+
+.modal-actions button:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-2px);
+}
+
+.modal-actions i {
+  font-size: 18px;
+}
+
+.icon-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.copy-tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s ease;
+}
+
+.copy-tooltip.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== SKELETON LOADING ===== */
+.achievement-card.skeleton {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.achievement-card.skeleton::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+.achievement-card.skeleton img,
+.achievement-card.skeleton h5,
+.achievement-card.skeleton small,
+.achievement-card.skeleton p {
+  background: rgba(255, 255, 255, 0.05);
+  color: transparent !important;
+}
+
+@keyframes shimmer {
+  0% { left: -150px; }
+  100% { left: 100%; }
+}
+
+.achievement-slide {
+  flex: 0 0 calc(33.333% - 16px); /* 3 slides per view minus gap */
+  margin-right: 12px;              /* spacing between slides */
+  box-sizing: border-box;
+}
+
+@media (max-width: 992px) {
+  .achievement-slide {
+    flex: 0 0 calc(50% - 12px); /* 2 slides on tablet */
+  }
+}
+
+@media (max-width: 576px) {
+  .achievement-slide {
+    flex: 0 0 calc(100% - 8px); /* 1 slide on mobile */
+  }
+}
+
 
 .projects-terminal {
   width: 100%;

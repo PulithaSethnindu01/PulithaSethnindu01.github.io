@@ -1,40 +1,100 @@
 // ===== CONFIG =====
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxDvIXhBFEMzj2WVX0pCIbk2wzMWr0RIbopJggl7iWD6g4itpUKIsw6XVq-xAIWjtZo/exec";
 
+
+function showSkeletons(containerId, count = 6) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = ""; // clear previous
+
+  for (let i = 0; i < count; i++) {
+    const col = document.createElement("div");
+    col.className = "col-md-4 mb-4 achievement-col";
+
+    col.innerHTML = `
+      <div class="achievement-card skeleton">
+        <img src="https://placehold.co/300x200?text=Loading" />
+        <h5>Loading</h5>
+        <small>...</small>
+        <p>Loading description...</p>
+      </div>
+    `;
+    container.appendChild(col);
+  }
+}
+
+function showSliderSkeletons(containerId, count = 3) {
+  const track = document.getElementById(containerId);
+  if (!track) return;
+
+  track.innerHTML = ""; // clear previous
+
+  for (let i = 0; i < count; i++) {
+    const slide = document.createElement("div");
+    slide.className = "achievement-slide skeleton";
+
+    // Set min-width so flex layout works
+    slide.style.minWidth = "250px"; // or whatever your slide width is
+    slide.style.flex = "0 0 auto";  // ensure slides sit next to each other
+
+    slide.innerHTML = `
+      <div class="achievement-card skeleton">
+        <img src="https://placehold.co/300x200?text=Loading" />
+        <h5>Loading</h5>
+        <small>...</small>
+        <p>Loading description...</p>
+      </div>
+    `;
+
+    // Stagger fade-in
+    slide.style.animation = `skeletonFadeIn 0.5s forwards`;
+    slide.style.animationDelay = `${i * 0.2}s`;
+
+    track.appendChild(slide);
+  }
+}
+
+
+
 // ===== FETCH ACHIEVEMENTS =====
 async function fetchAchievements() {
   try {
     const res = await fetch(WEB_APP_URL, { cache: "no-store" });
-
     if (!res.ok) throw new Error("Network response failed");
-
     const data = await res.json();
-
     if (!Array.isArray(data)) {
       console.error("Invalid data:", data);
-      return [];
+      return null; // ❌ return null on invalid data
     }
-
     return data;
-
   } catch (err) {
     console.error("Failed to fetch achievements:", err);
-    return [];
+    return null; // ❌ return null if network fails
   }
 }
 
+
+function openFromURL(achievements) {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("ach");
+  if (!id) return;
+
+  const ach = achievements.find(a => String(a.id) === id);
+  if (ach) {
+    window.openAchievementModal(ach);
+  }
+}
 
 // ===== GRID =====
 function loadAllAchievements(containerId, achievements) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  
 
-// Inside loadAllAchievements()
-const loadingText = document.querySelector("#all-achievements-section .section-loading");
-if (loadingText) loadingText.remove();
+  // 🔥 CLEAR SKELETONS / LOADING CARDS
+  container.innerHTML = "";
 
-
+  // Sort achievements by date
   const sorted = [...achievements].sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
@@ -69,6 +129,7 @@ if (loadingText) loadingText.remove();
     container.appendChild(col);
   });
 
+  // Lazy load images
   const lazyImages = container.querySelectorAll("img[data-src]");
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
@@ -83,6 +144,7 @@ if (loadingText) loadingText.remove();
 
   lazyImages.forEach(img => observer.observe(img));
 }
+
 
 // ===== FILTER =====
 function filterAchievementsByYear(year) {
@@ -129,6 +191,23 @@ function populateYearPills(containerId, achievements) {
 
 // ===== RESPONSIVE SLIDER (FINAL FIX) =====
 async function autoHorizontalSlider(containerId, achievements) {
+
+  function removeSliderSkeletons(containerId) {
+  const track = document.getElementById(containerId);
+  if (!track) return;
+
+  const skeletons = track.querySelectorAll(".achievement-slide.skeleton");
+  skeletons.forEach((slide, i) => {
+    slide.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+    slide.style.transitionDelay = `${i * 0.1}s`;
+    slide.style.opacity = 0;
+    slide.style.transform = "translateY(10px)";
+  });
+
+  setTimeout(() => {
+    track.innerHTML = "";
+  }, skeletons.length * 100 + 300);
+}
 
   const track = document.getElementById(containerId);
   if (!track) return;
@@ -318,24 +397,42 @@ slider.addEventListener("touchend", dragEnd);
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", async () => {
+  showSkeletons("all-achievements", 6); // show 6 skeleton cards
+  showSliderSkeletons("latest-achievements-home", 3); // Slider
   const achievements = await fetchAchievements();
 
-  await loadAllAchievements("all-achievements", achievements);
-  populateYearPills("achievement-year-pills", achievements);
-  autoHorizontalSlider("latest-achievements-home", achievements);
+  if (achievements && achievements.length) {
+    loadAllAchievements("all-achievements", achievements);
+    populateYearPills("achievement-year-pills", achievements);
+    autoHorizontalSlider("latest-achievements-home", achievements);
+    openFromURL(achievements); // open modal from URL if ?ach=
+  } else {
+    console.log("No achievements loaded");
+    // ⚡ Keep skeletons, optionally show a "Retry" button
+  }
+  openFromURL(achievements); // ⭐ add this
 });
 
 
 
 const modal = document.getElementById("achievement-modal");
+
 if (modal) {
+
   const modalImg = document.getElementById("modal-img");
   const modalTitle = document.getElementById("modal-title");
   const modalDate = document.getElementById("modal-date");
   const modalDesc = document.getElementById("modal-desc");
 
+  const copyBtn = document.getElementById("copy-link-btn");
+  const shareBtn = document.getElementById("share-btn");
+
+  let currentAchievement = null;
+
   function openAchievementModal(ach) {
     if (!modalImg || !modalTitle || !modalDate || !modalDesc) return;
+
+    currentAchievement = ach;
 
     modalImg.src = ach.image || "";
     modalTitle.textContent = ach.title;
@@ -352,16 +449,73 @@ if (modal) {
     modal.classList.add("hidden");
     document.body.style.overflow = "";
 
-    // Remove the ?ach=… from URL without reloading
     history.pushState({}, "", window.location.pathname);
   }
 
+  // Close events
   const closeBtn = modal.querySelector(".modal-close");
   const overlay = modal.querySelector(".achievement-modal-overlay");
+
   if (closeBtn) closeBtn.onclick = closeAchievementModal;
   if (overlay) overlay.onclick = closeAchievementModal;
 
   window.addEventListener("keydown", e => {
     if (e.key === "Escape") closeAchievementModal();
   });
+
+  // ===== COPY LINK =====
+// ===== COPY LINK =====
+if (copyBtn) {
+  copyBtn.onclick = () => {
+
+    if (!currentAchievement) return;
+
+    const url =
+      `${window.location.origin}${window.location.pathname}?ach=${currentAchievement.id}`;
+
+    navigator.clipboard.writeText(url).then(() => {
+
+      const tooltip =
+        copyBtn.parentElement.querySelector(".copy-tooltip");
+
+      if (tooltip) {
+        tooltip.classList.add("show");
+
+        setTimeout(() => {
+          tooltip.classList.remove("show");
+        }, 1200);
+      }
+
+    });
+
+  };
+}
+
+  // ===== SHARE =====
+  if (shareBtn) {
+    shareBtn.onclick = async () => {
+      if (!currentAchievement) return;
+
+      const url =
+        `${window.location.origin}${window.location.pathname}?ach=${currentAchievement.id}`;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: currentAchievement.title,
+            text: currentAchievement.description,
+            url: url
+          });
+        } catch (err) {
+          console.log("Share cancelled");
+        }
+      } else {
+        navigator.clipboard.writeText(url);
+        alert("Link copied!");
+      }
+    };
+  }
+
+  // 🔥 expose function globally so cards can call it
+  window.openAchievementModal = openAchievementModal;
 }
